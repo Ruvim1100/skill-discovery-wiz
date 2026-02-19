@@ -2,104 +2,207 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ── Geist Font ────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap');
 
+/* ── Design System — OKLCH Color Tokens ───────────────────── */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base surfaces */
+    --background: oklch(1.00 0 0);
+    --foreground: oklch(0.14 0 0);
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: oklch(1.00 0 0);
+    --card-foreground: oklch(0.14 0 0);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: oklch(1.00 0 0);
+    --popover-foreground: oklch(0.14 0 0);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand — Blue */
+    --primary: oklch(0.55 0.22 264);
+    --primary-foreground: oklch(0.99 0 0);
+    --primary-hover: oklch(0.49 0.22 264);
+    --primary-subtle: oklch(0.95 0.04 264);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary */
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.20 0 0);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted */
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.56 0 0);
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent */
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.20 0 0);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Semantic */
+    --destructive: oklch(0.58 0.24 28.48);
+    --destructive-foreground: oklch(0.99 0 0);
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Domain-specific */
+    --strong-fit: oklch(0.55 0.17 155);
+    --strong-fit-foreground: oklch(0.99 0 0);
+    --success: oklch(0.55 0.17 155);
+    --success-foreground: oklch(0.99 0 0);
+    --success-subtle: oklch(0.95 0.05 155);
+    --warning: oklch(0.70 0.17 70);
+    --warning-foreground: oklch(0.20 0 0);
+    --warning-subtle: oklch(0.97 0.05 70);
+    --info: oklch(0.65 0.15 220);
+    --info-foreground: oklch(0.99 0 0);
 
-    --radius: 0.5rem;
+    /* Borders / inputs */
+    --border: oklch(0.92 0 0);
+    --input: oklch(0.92 0 0);
+    --ring: oklch(0.55 0.22 264);
 
-    --sidebar-background: 0 0% 98%;
+    /* Stepper */
+    --stepper-completed: oklch(0.55 0.17 155);
+    --stepper-current: oklch(0.55 0.22 264);
+    --stepper-upcoming: oklch(0.82 0 0);
+    --stepper-line: oklch(0.92 0 0);
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Radius */
+    --radius: 0.625rem;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Font */
+    --font-sans: 'Geist', 'Geist Fallback', ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar (kept for shadcn compatibility) */
+    --sidebar-background: oklch(0.99 0 0);
+    --sidebar-foreground: oklch(0.30 0 0);
+    --sidebar-primary: oklch(0.55 0.22 264);
+    --sidebar-primary-foreground: oklch(0.99 0 0);
+    --sidebar-accent: oklch(0.95 0 0);
+    --sidebar-accent-foreground: oklch(0.20 0 0);
+    --sidebar-border: oklch(0.92 0 0);
+    --sidebar-ring: oklch(0.55 0.22 264);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: oklch(0.10 0 0);
+    --foreground: oklch(0.96 0 0);
+    --card: oklch(0.13 0 0);
+    --card-foreground: oklch(0.96 0 0);
+    --popover: oklch(0.13 0 0);
+    --popover-foreground: oklch(0.96 0 0);
+    --primary: oklch(0.65 0.20 264);
+    --primary-foreground: oklch(0.10 0 0);
+    --secondary: oklch(0.18 0 0);
+    --secondary-foreground: oklch(0.96 0 0);
+    --muted: oklch(0.18 0 0);
+    --muted-foreground: oklch(0.60 0 0);
+    --accent: oklch(0.18 0 0);
+    --accent-foreground: oklch(0.96 0 0);
+    --destructive: oklch(0.58 0.24 28.48);
+    --destructive-foreground: oklch(0.99 0 0);
+    --border: oklch(0.22 0 0);
+    --input: oklch(0.22 0 0);
+    --ring: oklch(0.65 0.20 264);
+    --sidebar-background: oklch(0.10 0 0);
+    --sidebar-foreground: oklch(0.96 0 0);
+    --sidebar-primary: oklch(0.65 0.20 264);
+    --sidebar-primary-foreground: oklch(0.10 0 0);
+    --sidebar-accent: oklch(0.18 0 0);
+    --sidebar-accent-foreground: oklch(0.96 0 0);
+    --sidebar-border: oklch(0.22 0 0);
+    --sidebar-ring: oklch(0.65 0.20 264);
   }
 }
 
+/* ── Base Styles ───────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
   }
 
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ── Component Utilities ───────────────────────────────────── */
+@layer utilities {
+  /* Stepper pulse dot */
+  .stepper-pulse {
+    animation: stepper-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes stepper-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.88); }
+  }
+
+  /* Stage transition */
+  .stage-enter {
+    animation: stage-fade-in 200ms ease-out forwards;
+  }
+
+  .stage-exit {
+    animation: stage-fade-out 100ms ease-out forwards;
+  }
+
+  @keyframes stage-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes stage-fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-4px); }
+  }
+
+  /* Progress bar */
+  .progress-bar-fill {
+    transition: width 800ms ease-out;
+  }
+
+  /* Selectable card states */
+  .selectable-card {
+    transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
+  }
+
+  .selectable-card:hover:not([aria-disabled="true"]) {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px -2px oklch(0 0 0 / 0.12);
+  }
+
+  .selectable-card:active:not([aria-disabled="true"]) {
+    transform: scale(0.98);
   }
 }
