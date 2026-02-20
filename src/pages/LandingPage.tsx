@@ -37,6 +37,16 @@ import {
   BarChart3,
   FileText,
   Sparkles,
+  ClipboardList,
+  Rocket,
+  UserPlus,
+  Search,
+  Settings2,
+  FileBarChart,
+  ListChecks,
+  LayoutDashboard,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 // ── Shared container ─────────────────────────────────────────
@@ -345,200 +355,157 @@ const WhyChooseSection: React.FC = () => (
 );
 
 // ── Section 5: How It Works ───────────────────────────────────
-const steps = [
+const HOW_IT_WORKS_STEPS = [
   {
-    number: "01",
-    icon: <Compass size={24} aria-hidden="true" />,
-    title: "Orientation",
-    description:
-      "Tell us where you are in your career journey and what you're hoping to achieve. This personalises your entire assessment experience.",
+    icon: ClipboardList,
+    title: 'Assessment',
+    description: 'Answer thoughtful questions about your values, aptitudes, interests, and preferences. Takes about 20 minutes.',
   },
   {
-    number: "02",
-    icon: <Heart size={24} aria-hidden="true" />,
-    title: "Discover Your Values",
-    description:
-      "Identify what truly matters to you in work — autonomy, impact, security, creativity — and rank them to reveal your core career drivers.",
+    icon: BarChart3,
+    title: 'Analysis',
+    description: 'Our AI-powered engine matches your profile against 500+ career paths using the 14-factor framework.',
   },
   {
-    number: "03",
-    icon: <Brain size={24} aria-hidden="true" />,
-    title: "Map Your Aptitudes",
-    description:
-      "Self-rate your natural strengths across analytical, creative, interpersonal, and technical domains with evidence-based confidence scales.",
+    icon: Rocket,
+    title: 'Action',
+    description: 'Receive your personalized Career Fit Report and a step-by-step action plan to reach your target role.',
   },
-  {
-    number: "04",
-    icon: <Lightbulb size={24} aria-hidden="true" />,
-    title: "Explore Interests",
-    description:
-      "Uncover which fields and activities energise you using Holland Code theory, structured into six broad interest areas.",
-  },
-  {
-    number: "05",
-    icon: <Target size={24} aria-hidden="true" />,
-    title: "Define Preferences",
-    description:
-      "Specify your ideal working environment, team dynamics, structure, and lifestyle — the practical factors that shape day-to-day satisfaction.",
-  },
-  {
-    number: "06",
-    icon: <BarChart3 size={24} aria-hidden="true" />,
-    title: "Receive Your Report",
-    description:
-      "Get a personalised Career Fit Report with ranked matches, strengths, growth areas, and specific next-step recommendations.",
-  },
-];
+] as const;
+
+const HowItWorksStep: React.FC<{ step: typeof HOW_IT_WORKS_STEPS[number]; index: number; isLast: boolean }> = ({ step, index, isLast }) => {
+  const { ref, visible } = useScrollFadeIn(index * 150);
+  const Icon = step.icon;
+
+  return (
+    <div
+      ref={ref}
+      className={`flex flex-col items-center text-center ${
+        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transition: 'opacity 400ms ease-out, transform 400ms ease-out' }}
+    >
+      <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
+        {index + 1}
+      </div>
+      <Icon size={28} className="text-muted-foreground mt-3" aria-hidden="true" />
+      <h3 className="text-foreground mt-3">{step.title}</h3>
+      <p className="text-base text-muted-foreground leading-relaxed mt-2 max-w-xs">{step.description}</p>
+    </div>
+  );
+};
 
 const HowItWorks: React.FC = () => (
-  <section className="py-12 lg:py-16" aria-labelledby="how-it-works-heading">
+  <section className="py-12 bg-muted" aria-labelledby="how-it-works-heading">
     <Container>
-      <div className="text-center mb-10">
-        <h2 id="how-it-works-heading">How the Assessment Works</h2>
-        <p className="mt-3 text-base text-muted-foreground max-w-xl mx-auto">
-          Six guided stages, each building on the last — designed to take
-          20–25 minutes at your own pace.
-        </p>
-      </div>
+      <h2 id="how-it-works-heading" className="text-center mb-10">How It Works</h2>
 
-      <div className="relative">
-        <div
-          className="hidden lg:block absolute top-8 left-0 right-0 h-px bg-border"
-          aria-hidden="true"
-        />
-
-        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-4 relative">
-          {steps.map((step, i) => (
-            <li key={step.number} className="flex flex-col items-start lg:items-center lg:text-center">
-              <div
-                className="relative flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/20 mb-4 shrink-0 z-10"
-                aria-hidden="true"
-              >
-                <span className="text-primary">{step.icon}</span>
-                <span className="absolute -top-1 -right-1 text-xs font-bold text-primary-foreground bg-primary rounded-full w-5 h-5 flex items-center justify-center leading-none">
-                  {i + 1}
-                </span>
+      {/* Mobile: vertical with dashed connectors */}
+      <div className="flex flex-col items-center gap-0 lg:hidden">
+        {HOW_IT_WORKS_STEPS.map((step, i) => (
+          <React.Fragment key={step.title}>
+            <HowItWorksStep step={step} index={i} isLast={i === HOW_IT_WORKS_STEPS.length - 1} />
+            {i < HOW_IT_WORKS_STEPS.length - 1 && (
+              <div className="flex justify-center py-1" aria-hidden="true">
+                <div className="border-l-2 border-dashed border-border h-8 ml-0" />
               </div>
-              <h3 className="text-base font-semibold text-foreground mb-1">
-                {step.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {step.description}
-              </p>
-            </li>
-          ))}
-        </ol>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
-      <div className="text-center mt-10">
-        <Button size="lg" asChild>
-          <Link to="/assessment">
-            Begin Your Journey
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </Button>
+      {/* Desktop: horizontal */}
+      <div className="hidden lg:flex items-start justify-center gap-8">
+        {HOW_IT_WORKS_STEPS.map((step, i) => (
+          <React.Fragment key={step.title}>
+            <HowItWorksStep step={step} index={i} isLast={i === HOW_IT_WORKS_STEPS.length - 1} />
+            {i < HOW_IT_WORKS_STEPS.length - 1 && (
+              <div className="flex items-center pt-5" aria-hidden="true">
+                <div className="border-t-2 border-dashed border-border w-16" />
+              </div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </Container>
   </section>
 );
 
-// ── Section 5: 14-Factor Framework ───────────────────────────
-const dimensions = [
-  {
-    label: "Values",
-    color: "text-primary",
-    bg: "bg-primary/8",
-    border: "border-primary/20",
-    icon: <Heart size={20} aria-hidden="true" />,
-    factors: [
-      { name: "Work-Life Integration", desc: "Boundaries, flexibility, and personal time" },
-      { name: "Purpose & Impact", desc: "Meaning derived from your contribution" },
-      { name: "Financial Security", desc: "Income stability and earning potential" },
-      { name: "Autonomy & Independence", desc: "Control over how and when you work" },
-    ],
-  },
-  {
-    label: "Aptitudes",
-    color: "text-success",
-    bg: "bg-success/8",
-    border: "border-success/20",
-    icon: <Brain size={20} aria-hidden="true" />,
-    factors: [
-      { name: "Analytical Thinking", desc: "Data, logic, and problem-solving" },
-      { name: "Creative Expression", desc: "Ideas, design, and innovation" },
-      { name: "Interpersonal Skills", desc: "Communication and relationship-building" },
-      { name: "Technical Proficiency", desc: "Hands-on and tool-based skills" },
-    ],
-  },
-  {
-    label: "Interests",
-    color: "text-info",
-    bg: "bg-info/8",
-    border: "border-info/20",
-    icon: <Lightbulb size={20} aria-hidden="true" />,
-    factors: [
-      { name: "Investigative", desc: "Research, science, and intellectual curiosity" },
-      { name: "Artistic", desc: "Creativity, expression, and aesthetics" },
-      { name: "Social", desc: "Teaching, helping, and community impact" },
-      { name: "Enterprising", desc: "Leadership, persuasion, and entrepreneurship" },
-    ],
-  },
-  {
-    label: "Preferences",
-    color: "text-warning",
-    bg: "bg-warning/8",
-    border: "border-warning/20",
-    icon: <Target size={20} aria-hidden="true" />,
-    factors: [
-      { name: "Work Environment", desc: "Remote, office, field, or hybrid" },
-      { name: "Team Dynamics", desc: "Solo, small team, or large organisation" },
-    ],
-  },
-];
+// ── Section 6: Assessment Journey Preview ─────────────────────
+const JOURNEY_STAGES = [
+  { stage: 'S0', icon: UserPlus, name: 'Getting Started', description: 'Create your account and set up your profile' },
+  { stage: 'S1', icon: Compass, name: 'Orientation', description: 'Tell us about your career stage and goals' },
+  { stage: 'S2', icon: Heart, name: 'Values', description: 'Identify what matters most to you at work' },
+  { stage: 'S3', icon: Lightbulb, name: 'Aptitudes', description: 'Discover your natural strengths and skills' },
+  { stage: 'S4', icon: Search, name: 'Interests', description: 'Explore industries and fields that excite you' },
+  { stage: 'S5', icon: Settings2, name: 'Preferences', description: 'Define your ideal working style and environment' },
+  { stage: 'S6', icon: FileBarChart, name: 'Career Fit Report', description: 'See your personalized career matches and insights' },
+  { stage: 'S7', icon: Target, name: 'Plan Setup', description: 'Set your goals and preferences for action planning' },
+  { stage: 'S8', icon: ListChecks, name: 'Action Plan', description: 'Get a step-by-step roadmap to your target role' },
+  { stage: 'S9', icon: LayoutDashboard, name: 'Dashboard', description: 'Track your progress and access career tools' },
+] as const;
 
-const FrameworkSection: React.FC = () => (
-  <section
-    className="py-12 lg:py-16 bg-secondary/30"
-    aria-labelledby="framework-heading"
-  >
+const AssessmentJourney: React.FC = () => (
+  <section className="py-12" aria-labelledby="journey-heading">
     <Container>
       <div className="text-center mb-10">
-        <h2 id="framework-heading">The 14-Factor Framework</h2>
+        <h2 id="journey-heading">Your Assessment Journey</h2>
         <p className="mt-3 text-base text-muted-foreground max-w-xl mx-auto">
-          Four career dimensions. Fourteen evidence-based factors. One
-          comprehensive picture of where you'll truly fit.
+          Here's what to expect — no surprises, just a guided career conversation.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {dimensions.map((dim) => (
-          <div
-            key={dim.label}
-            className={`rounded-xl border ${dim.border} ${dim.bg} p-5 flex flex-col gap-4`}
-          >
-            <div className="flex items-center gap-2">
-              <span className={dim.color}>{dim.icon}</span>
-              <h3 className={`text-base font-semibold ${dim.color}`}>{dim.label}</h3>
-            </div>
-            <ul className="flex flex-col gap-3" role="list">
-              {dim.factors.map((factor) => (
-                <li key={factor.name} className="flex gap-2 items-start">
-                  <CheckCircle2
-                    size={15}
-                    className={`${dim.color} mt-0.5 shrink-0 opacity-80`}
-                    aria-hidden="true"
-                  />
+      {/* Mobile: vertical timeline */}
+      <div className="lg:hidden flex flex-col relative">
+        <div className="absolute left-[19px] top-4 bottom-4 w-px bg-border" aria-hidden="true" />
+        <div className="flex flex-col gap-6">
+          {JOURNEY_STAGES.map((s) => {
+            const Icon = s.icon;
+            return (
+              <div key={s.stage} className="flex gap-4 items-start relative">
+                <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center">
+                  <span className="text-xs font-semibold text-muted-foreground">{s.stage}</span>
+                </div>
+                <div
+                  className="flex-1 bg-card border border-border rounded-lg p-4 flex items-start gap-3 hover:shadow-sm transition-shadow duration-150"
+                  title={s.description}
+                >
+                  <Icon size={20} className="text-muted-foreground shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
-                    <p className="text-sm font-medium text-foreground leading-snug">
-                      {factor.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground leading-snug">
-                      {factor.desc}
-                    </p>
+                    <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
                   </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Desktop: 2 rows of 5 */}
+      <div className="hidden lg:flex flex-col gap-6">
+        {[JOURNEY_STAGES.slice(0, 5), JOURNEY_STAGES.slice(5)].map((row, rowIdx) => (
+          <div key={rowIdx} className="relative">
+            <div className="absolute top-5 left-[5%] right-[5%] h-px bg-border" aria-hidden="true" />
+            <div className="grid grid-cols-5 gap-4 relative">
+              {row.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <div
+                    key={s.stage}
+                    className="flex flex-col items-center text-center bg-card border border-border rounded-lg p-4 hover:shadow-sm transition-shadow duration-150 relative z-10"
+                    title={s.description}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center mb-3">
+                      <span className="text-xs font-semibold text-muted-foreground">{s.stage}</span>
+                    </div>
+                    <Icon size={20} className="text-muted-foreground mb-2" aria-hidden="true" />
+                    <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">{s.description}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         ))}
       </div>
@@ -546,30 +513,33 @@ const FrameworkSection: React.FC = () => (
   </section>
 );
 
-// ── Section 6: Testimonials ───────────────────────────────────
-const testimonials = [
+// ── Section 7: Testimonials Carousel ─────────────────────────
+const TESTIMONIALS = [
   {
-    quote:
-      "I'd been stuck in the same role for years, unsure why I felt unfulfilled. YourVue's report showed me that autonomy and creative expression were my top drivers — I'd been in a highly structured environment with zero room for either. Six months later, I'm in a role that actually fits.",
-    name: "Sarah M.",
-    role: "Former Project Manager, now UX Researcher",
-    rating: 5,
+    quote: "YourVue gave me clarity I'd been searching for. The 14-factor framework helped me understand why I felt stuck and showed me paths I'd never considered.",
+    name: 'Sarah M.',
+    role: 'Marketing Professional',
+    stars: 5,
   },
   {
-    quote:
-      "The 14 factors really resonated — it wasn't just another personality quiz. The way it mapped my interests against my aptitudes gave me a specific shortlist of career paths I'd never considered. I started my MSc in Data Science two months after completing it.",
-    name: "James T.",
-    role: "Career Changer, now Data Science Graduate Student",
-    rating: 5,
+    quote: "As someone just starting out, I was overwhelmed by career options. The assessment broke it down into manageable steps and gave me a clear direction.",
+    name: 'James K.',
+    role: 'Recent Graduate',
+    stars: 5,
   },
   {
-    quote:
-      "What stood out was how the report acknowledged my strengths without glossing over the areas I need to develop. It felt honest and supportive at the same time — like a really good career coach conversation.",
-    name: "Priya K.",
-    role: "Early-career professional, Marketing to Product",
-    rating: 5,
+    quote: "After 8 years in finance, I knew I wanted a change but didn't know where to start. The action plan was incredibly detailed and practical.",
+    name: 'Priya R.',
+    role: 'Career Changer',
+    stars: 4,
   },
-];
+  {
+    quote: "I was skeptical at first, but the depth of analysis surprised me. The career matches were spot-on and the skill gap analysis was eye-opening.",
+    name: 'Alex T.',
+    role: 'Senior Developer',
+    stars: 5,
+  },
+] as const;
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
   <div className="flex gap-0.5" aria-label={`${rating} out of 5 stars`}>
@@ -584,37 +554,93 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
   </div>
 );
 
-const Testimonials: React.FC = () => (
-  <section className="py-12 lg:py-16" aria-labelledby="testimonials-heading">
-    <Container>
-      <div className="text-center mb-10">
-        <h2 id="testimonials-heading">What Users Are Saying</h2>
-        <p className="mt-3 text-base text-muted-foreground max-w-lg mx-auto">
-          Real stories from people who found clarity with YourVue.
-        </p>
-      </div>
+const Testimonials: React.FC = () => {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const len = TESTIMONIALS.length;
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {testimonials.map((t) => (
-          <figure
-            key={t.name}
-            className="bg-card border border-border rounded-xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+  useEffect(() => {
+    if (paused) return;
+    const timer = setInterval(() => setActive((p) => (p + 1) % len), 5000);
+    return () => clearInterval(timer);
+  }, [paused, len]);
+
+  const goTo = (idx: number) => {
+    setActive(idx);
+    setPaused(true);
+    setTimeout(() => setPaused(false), 10000);
+  };
+
+  const t = TESTIMONIALS[active];
+
+  return (
+    <section
+      className="py-12 bg-muted"
+      aria-labelledby="testimonials-heading"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <Container>
+        <h2 id="testimonials-heading" className="text-center mb-10">What Our Users Say</h2>
+
+        <div
+          className="relative max-w-2xl mx-auto"
+          aria-roledescription="carousel"
+          aria-label="User testimonials"
+        >
+          {/* Desktop arrows */}
+          <button
+            onClick={() => goTo((active - 1 + len) % len)}
+            className="hidden lg:flex absolute -left-14 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full border border-border bg-card hover:bg-accent transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Previous testimonial"
           >
-            <StarRating rating={t.rating} />
-            <blockquote>
-              <p className="text-sm text-foreground leading-relaxed">"{t.quote}"</p>
-            </blockquote>
-            <figcaption className="mt-auto">
-              <p className="text-sm font-semibold text-foreground">{t.name}</p>
-              <p className="text-xs text-muted-foreground">{t.role}</p>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-    </Container>
-  </section>
-);
+            <ChevronLeft size={20} className="text-muted-foreground" />
+          </button>
+          <button
+            onClick={() => goTo((active + 1) % len)}
+            className="hidden lg:flex absolute -right-14 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full border border-border bg-card hover:bg-accent transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight size={20} className="text-muted-foreground" />
+          </button>
 
+          <div aria-live="polite" className="overflow-hidden">
+            <figure
+              key={active}
+              className="bg-card border border-border rounded-xl p-8 flex flex-col items-center text-center gap-4 shadow-sm animate-[fade-in_300ms_ease-out]"
+            >
+              <StarRating rating={t.stars} />
+              <blockquote>
+                <p className="text-lg italic text-foreground leading-relaxed">"{t.quote}"</p>
+              </blockquote>
+              <figcaption className="mt-2">
+                <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                <span className="inline-block mt-1 text-xs text-muted-foreground bg-muted rounded-full px-3 py-1">
+                  {t.role}
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Testimonial navigation">
+            {TESTIMONIALS.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`w-2.5 h-2.5 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  i === active ? 'bg-primary' : 'bg-border'
+                }`}
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`Testimonial ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+};
 // ── Section 7: Report Preview / Value Props ───────────────────
 const reportFeatures = [
   {
@@ -849,7 +875,7 @@ const LandingPage: React.FC = () => (
         <StatsSection />
         <WhyChooseSection />
         <HowItWorks />
-        <FrameworkSection />
+        <AssessmentJourney />
         <Testimonials />
         <ReportPreview />
         <FAQ />
