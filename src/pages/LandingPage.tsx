@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Sheet,
   SheetContent,
@@ -24,6 +25,8 @@ import {
   Zap,
   Target,
   Users,
+  UserCheck,
+  Globe,
   TrendingUp,
   BookOpen,
   Compass,
@@ -116,6 +119,65 @@ const Header: React.FC = () => {
   );
 };
 
+// ── Counter animation hook ────────────────────────────────────
+function useCountUp(target: number, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started) setStarted(true);
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [started]);
+
+  useEffect(() => {
+    if (!started) return;
+    const start = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      setCount(Math.round(target * eased));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [started, target, duration]);
+
+  return { count, ref };
+}
+
+// ── Scroll fade-in hook ──────────────────────────────────────
+function useScrollFadeIn(delay = 0) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setVisible(true), delay);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [delay]);
+
+  return { ref, visible };
+}
+
 // ── Section 2: Hero ───────────────────────────────────────────
 const Hero: React.FC = () => (
   <section
@@ -126,10 +188,7 @@ const Hero: React.FC = () => (
       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
         {/* Text column */}
         <div className="flex-1 lg:max-w-[60%] text-center lg:text-left">
-          <h1
-            id="hero-headline"
-            className="text-foreground"
-          >
+          <h1 id="hero-headline" className="text-foreground">
             Discover Your Career Path with YourVue Assessment
           </h1>
           <p className="mt-4 text-base text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
@@ -137,9 +196,9 @@ const Hero: React.FC = () => (
             aptitudes, interests, and working preferences to match you with
             careers where you'll thrive.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Button size="lg" className="w-full sm:w-auto" asChild>
-              <Link to="/assessment">
+              <Link to="/register">
                 Start Your Assessment
                 <ArrowRight size={16} aria-hidden="true" />
               </Link>
@@ -148,7 +207,6 @@ const Hero: React.FC = () => (
               <Link to="/login">Sign In</Link>
             </Button>
           </div>
-          {/* Trust micro-copy */}
           <p className="mt-5 text-sm text-muted-foreground">
             Free to start · No credit card required · 20–25 minutes
           </p>
@@ -159,12 +217,10 @@ const Hero: React.FC = () => (
           className="hidden lg:flex flex-1 items-center justify-center relative"
           aria-hidden="true"
         >
-          {/* Abstract overlapping circles */}
           <div className="relative w-80 h-80">
             <div className="absolute inset-0 rounded-full bg-primary/10 scale-100" />
             <div className="absolute inset-8 rounded-full bg-info/15 rotate-12" />
             <div className="absolute inset-16 rounded-full bg-success/15 -rotate-6" />
-            {/* Floating icons */}
             <div className="absolute top-6 right-8 bg-background rounded-xl shadow-md p-3 border border-border">
               <Brain size={24} className="text-primary" />
             </div>
@@ -177,7 +233,6 @@ const Hero: React.FC = () => (
             <div className="absolute top-1/2 right-0 -translate-y-1/2 bg-background rounded-xl shadow-md p-3 border border-border">
               <Compass size={24} className="text-info" />
             </div>
-            {/* Center badge */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="bg-background rounded-2xl shadow-lg border border-border px-5 py-3 text-center">
                 <p className="text-2xl font-bold text-primary">14</p>
@@ -191,37 +246,105 @@ const Hero: React.FC = () => (
   </section>
 );
 
-// ── Section 3: Social Proof / Stats ──────────────────────────
-const stats = [
-  { value: "94%", label: "feel more career clarity after completing the assessment", color: "text-primary" },
-  { value: "12,000+", label: "assessments completed across 40+ industries", color: "text-info" },
-  { value: "8.7/10", label: "average satisfaction score from verified users", color: "text-success" },
-  { value: "14", label: "evidence-based factors across 4 career dimensions", color: "text-warning" },
-];
+// ── Section 3: Stats & Trust Indicators ──────────────────────
+const STATS = [
+  { icon: Users, value: '10,000+', numericValue: 10000, label: 'Users Guided', ariaLabel: '10,000 plus users guided', suffix: '+' },
+  { icon: TrendingUp, value: '95%', numericValue: 95, label: 'Success Rate', ariaLabel: '95 percent success rate', suffix: '%' },
+  { icon: Clock, value: '20 min', numericValue: 20, label: 'Assessment Time', ariaLabel: '20 minute assessment time', suffix: ' min' },
+  { icon: Compass, value: '500+', numericValue: 500, label: 'Career Paths', ariaLabel: '500 plus career paths', suffix: '+' },
+] as const;
 
-const SocialProof: React.FC = () => (
-  <section className="py-12 border-y border-border bg-secondary/40" aria-label="Platform statistics">
+const StatCard: React.FC<{ stat: typeof STATS[number] }> = ({ stat }) => {
+  const { count, ref } = useCountUp(stat.numericValue);
+  const Icon = stat.icon;
+  const formatted = stat.numericValue >= 1000
+    ? count.toLocaleString() + stat.suffix
+    : count + stat.suffix;
+
+  return (
+    <Card
+      ref={ref}
+      className="flex flex-col items-center text-center p-6 border border-border shadow-sm"
+      aria-label={stat.ariaLabel}
+    >
+      <Icon size={32} className="text-muted-foreground mb-3" aria-hidden="true" />
+      <span className="text-[30px] font-semibold text-info leading-none">
+        {formatted}
+      </span>
+      <span className="mt-2 text-sm text-muted-foreground">{stat.label}</span>
+    </Card>
+  );
+};
+
+const StatsSection: React.FC = () => (
+  <section className="py-12 bg-muted" aria-label="Platform statistics">
     <Container>
-      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-        {stats.map((stat) => (
-          <div key={stat.label} className="text-center">
-            <dt className="sr-only">{stat.label}</dt>
-            <dd>
-              <span className={`block text-3xl lg:text-4xl font-bold ${stat.color}`}>
-                {stat.value}
-              </span>
-              <span className="block mt-2 text-sm text-muted-foreground leading-snug">
-                {stat.label}
-              </span>
-            </dd>
-          </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        {STATS.map((stat) => (
+          <StatCard key={stat.label} stat={stat} />
         ))}
-      </dl>
+      </div>
     </Container>
   </section>
 );
 
-// ── Section 4: How It Works ───────────────────────────────────
+// ── Section 4: Why Choose YourVue ────────────────────────────
+const FEATURES = [
+  {
+    icon: Brain,
+    title: 'Evidence-Based Framework',
+    description: 'Built on a rigorous 14-factor model covering the dimensions that matter most for career satisfaction and success.',
+  },
+  {
+    icon: UserCheck,
+    title: 'Personalized Guidance',
+    description: 'Every recommendation is tailored to your unique profile — your values, strengths, interests, and working style.',
+  },
+  {
+    icon: Target,
+    title: 'Actionable Outputs',
+    description: 'Go beyond insights. Get a concrete action plan with tasks, timelines, and resources you can execute immediately.',
+  },
+  {
+    icon: Globe,
+    title: 'Culturally Inclusive',
+    description: 'Designed to respect diverse backgrounds, career stages, and cultural contexts. No one-size-fits-all approach.',
+  },
+] as const;
+
+const FeatureCard: React.FC<{ feature: typeof FEATURES[number]; index: number }> = ({ feature, index }) => {
+  const { ref, visible } = useScrollFadeIn(index * 100);
+  const Icon = feature.icon;
+
+  return (
+    <div
+      ref={ref}
+      className={`bg-card border border-border rounded-lg p-6 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 ease-out ${
+        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transition: 'opacity 400ms ease-out, transform 400ms ease-out, box-shadow 200ms ease-out' }}
+    >
+      <Icon size={32} className="text-primary mb-4" aria-hidden="true" />
+      <h3 className="text-foreground mb-2">{feature.title}</h3>
+      <p className="text-base text-muted-foreground leading-relaxed">{feature.description}</p>
+    </div>
+  );
+};
+
+const WhyChooseSection: React.FC = () => (
+  <section className="py-12" aria-labelledby="why-choose-heading">
+    <Container>
+      <h2 id="why-choose-heading" className="text-center mb-10">Why Choose YourVue</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {FEATURES.map((feature, i) => (
+          <FeatureCard key={feature.title} feature={feature} index={i} />
+        ))}
+      </div>
+    </Container>
+  </section>
+);
+
+// ── Section 5: How It Works ───────────────────────────────────
 const steps = [
   {
     number: "01",
@@ -279,7 +402,6 @@ const HowItWorks: React.FC = () => (
       </div>
 
       <div className="relative">
-        {/* Connecting line (desktop) */}
         <div
           className="hidden lg:block absolute top-8 left-0 right-0 h-px bg-border"
           aria-hidden="true"
@@ -288,7 +410,6 @@ const HowItWorks: React.FC = () => (
         <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-4 relative">
           {steps.map((step, i) => (
             <li key={step.number} className="flex flex-col items-start lg:items-center lg:text-center">
-              {/* Step number bubble */}
               <div
                 className="relative flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/20 mb-4 shrink-0 z-10"
                 aria-hidden="true"
@@ -725,7 +846,8 @@ const LandingPage: React.FC = () => (
       <Header />
       <main id="main-content" className="flex-1">
         <Hero />
-        <SocialProof />
+        <StatsSection />
+        <WhyChooseSection />
         <HowItWorks />
         <FrameworkSection />
         <Testimonials />
