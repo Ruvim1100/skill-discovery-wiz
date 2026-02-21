@@ -90,16 +90,15 @@ const ExitDialog: React.FC<{
 // ── WizardLayout ────────────────────────────────────────────
 interface WizardLayoutProps {
   children: React.ReactNode;
-  /**
-   * Whether the current stage's required fields are all valid.
-   * The parent stage component controls this.
-   */
   canContinue?: boolean;
+  /** Hide the bottom stage navigation bar (when a stage manages its own sub-step nav) */
+  hideStageNav?: boolean;
 }
 
 export const WizardLayout: React.FC<WizardLayoutProps> = ({
   children,
   canContinue = false,
+  hideStageNav = false,
 }) => {
   const {
     currentStage,
@@ -165,13 +164,15 @@ export const WizardLayout: React.FC<WizardLayoutProps> = ({
         </div>
 
         {/* ── Stage Navigation (Back / Continue) ── */}
-        <StageNavigation
-          onBack={isFirstStage ? undefined : handleBack}
-          onContinue={handleContinue}
-          canContinue={canContinue}
-          isFirstStage={isFirstStage}
-          isLastStage={isLastStage}
-        />
+        {!hideStageNav && (
+          <StageNavigation
+            onBack={isFirstStage ? undefined : handleBack}
+            onContinue={handleContinue}
+            canContinue={canContinue}
+            isFirstStage={isFirstStage}
+            isLastStage={isLastStage}
+          />
+        )}
       </main>
 
       {/* ── Exit Confirmation Dialog ── */}
