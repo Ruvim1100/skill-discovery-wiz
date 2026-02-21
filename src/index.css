@@ -205,4 +205,28 @@
   .selectable-card:active:not([aria-disabled="true"]) {
     transform: scale(0.98);
   }
+
+  /* Motivation popup sparkle */
+  @keyframes sparkle-burst {
+    0% {
+      opacity: 0;
+      transform: scale(0) translate(0, 0);
+    }
+    40% {
+      opacity: 1;
+      transform: scale(1.2) translate(var(--sparkle-dx, 10px), var(--sparkle-dy, -20px));
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.5) translate(
+        calc(var(--sparkle-dx, 10px) * 2),
+        calc(var(--sparkle-dy, -20px) * 2)
+      );
+    }
+  }
+
+  .sparkle-particle:nth-child(odd)  { --sparkle-dx: 15px;  --sparkle-dy: -25px; }
+  .sparkle-particle:nth-child(even) { --sparkle-dx: -12px; --sparkle-dy: -18px; }
+  .sparkle-particle:nth-child(3n)   { --sparkle-dx: 20px;  --sparkle-dy: -10px; }
+  .sparkle-particle:nth-child(4n)   { --sparkle-dx: -18px; --sparkle-dy: -30px; }
 }
