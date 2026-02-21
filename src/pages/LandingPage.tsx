@@ -795,78 +795,149 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({
   );
 };
 
-// ── Section 9 (Final): CTA + Footer ──────────────────────────
-const Footer: React.FC = () => (
-  <footer>
-    {/* Final CTA band */}
-    <section
-      className="py-12 lg:py-16 bg-primary text-primary-foreground"
-      aria-labelledby="final-cta-heading"
-    >
-      <Container>
-        <div className="text-center max-w-2xl mx-auto">
-          <Award size={36} className="mx-auto mb-4 opacity-80" aria-hidden="true" />
-          <h2
-            id="final-cta-heading"
-            className="text-primary-foreground"
+// ── Section 8a: Bottom Call to Action ─────────────────────────
+const BottomCTA: React.FC = () => (
+  <section
+    className="py-16 bg-primary text-primary-foreground"
+    aria-labelledby="final-cta-heading"
+  >
+    <Container>
+      <div className="text-center max-w-2xl mx-auto">
+        <h2 id="final-cta-heading" className="text-primary-foreground">
+          Ready to Discover Your Path?
+        </h2>
+        <p className="mt-4 text-base text-primary-foreground opacity-90 leading-relaxed">
+          Join thousands of professionals who've found career clarity with YourVue.
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <Button
+            size="lg"
+            className="w-full sm:w-auto bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+            asChild
           >
-            Ready to discover where you'll thrive?
-          </h2>
-          <p className="mt-4 text-base text-primary-foreground/80 leading-relaxed">
-            Start your free YourVue assessment today. 20–25 minutes. No credit
-            card. Just clarity.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="text-foreground hover:bg-secondary/90"
-              asChild
+            <Link to="/register">
+              Start Your Assessment
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 bg-transparent"
+            asChild
+          >
+            <Link to="/login">Sign In</Link>
+          </Button>
+        </div>
+      </div>
+    </Container>
+  </section>
+);
+
+// ── Section 8b: Contact ───────────────────────────────────────
+const ContactSection: React.FC = () => (
+  <section className="py-8 bg-background" aria-label="Contact information">
+    <Container>
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-0 text-center">
+        <a
+          href="mailto:contact@workvue.io"
+          className="text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+        >
+          contact@workvue.io
+        </a>
+        <span className="hidden lg:inline text-border mx-4" aria-hidden="true">|</span>
+        <p className="text-sm text-muted-foreground">
+          We typically respond within 2–3 business days
+        </p>
+        <span className="hidden lg:inline text-border mx-4" aria-hidden="true">|</span>
+        <Link
+          to="/help"
+          className="text-sm text-primary underline hover:text-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+        >
+          FAQ &amp; Help Center
+        </Link>
+      </div>
+    </Container>
+  </section>
+);
+
+// ── Section 8c: Privacy & Data Summary ────────────────────────
+const PrivacySummary: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <section className="py-6 bg-muted" aria-label="Privacy summary">
+      <Container>
+        <div className="max-w-2xl mx-auto">
+          <Collapsible open={open} onOpenChange={setOpen}>
+            <CollapsibleTrigger
+              className="flex items-center justify-center gap-2 w-full py-2 text-sm font-semibold text-foreground hover:text-primary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              aria-expanded={open}
             >
-              <Link to="/assessment">
-                Start Your Assessment
-                <ArrowRight size={16} aria-hidden="true" />
+              <Shield size={16} className="text-success" aria-hidden="true" />
+              Your data is safe with us
+              <ChevronDown
+                size={16}
+                className={`text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-3 pb-1">
+              <ul className="text-sm text-muted-foreground leading-relaxed space-y-2 list-disc list-inside">
+                <li>CV data is de-identified before AI processing</li>
+                <li>You can delete your data at any time</li>
+                <li>GDPR compliant</li>
+                <li>Full encryption in transit and at rest</li>
+              </ul>
+              <Link
+                to="/privacy"
+                className="inline-block mt-3 text-sm text-primary underline hover:text-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              >
+                Read our full Privacy Policy
               </Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="ghost"
-              className="text-primary-foreground border border-primary-foreground/30 hover:bg-primary-foreground/10"
-              asChild
-            >
-              <Link to="/login">Sign In</Link>
-            </Button>
-          </div>
-          <p className="mt-5 text-sm text-primary-foreground/60">
-            Free · Private · Takes 20–25 minutes
-          </p>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       </Container>
     </section>
+  );
+};
 
-    {/* Footer links */}
-    <div className="bg-foreground text-background/70 py-8">
-      <Container>
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <p className="font-semibold text-background">YourVue</p>
-          <nav className="flex flex-wrap gap-4 justify-center" aria-label="Footer navigation">
-            <Link to="/" className="hover:text-background transition-colors duration-150">Privacy Policy</Link>
-            <Link to="/" className="hover:text-background transition-colors duration-150">Terms of Use</Link>
-            <Link to="/" className="hover:text-background transition-colors duration-150">Accessibility</Link>
-            <Link to="/" className="hover:text-background transition-colors duration-150">Contact</Link>
-          </nav>
-          <p>© {new Date().getFullYear()} YourVue. All rights reserved.</p>
-        </div>
-      </Container>
-    </div>
+// ── Section 8d: Footer ────────────────────────────────────────
+const SiteFooter: React.FC = () => (
+  <footer className="py-6 bg-muted border-t border-border" role="contentinfo">
+    <Container>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        <p>© 2026 YourVue. All rights reserved.</p>
+        <nav className="flex flex-wrap gap-4 justify-center" aria-label="Footer navigation">
+          <Link
+            to="/privacy"
+            className="hover:text-foreground transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            to="/terms"
+            className="hover:text-foreground transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            Terms of Service
+          </Link>
+          <a
+            href="mailto:contact@workvue.io"
+            className="hover:text-foreground transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            Contact
+          </a>
+        </nav>
+      </div>
+    </Container>
   </footer>
 );
 
 // ── Main landing page ─────────────────────────────────────────
 const LandingPage: React.FC = () => (
   <>
-    {/* SEO */}
-    <title>YourVue — Discover Your Career Path with an Evidence-Based Assessment</title>
+    {/* SEO handled in index.html */}
 
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -880,7 +951,10 @@ const LandingPage: React.FC = () => (
         <ReportPreview />
         <FAQ />
       </main>
-      <Footer />
+      <BottomCTA />
+      <ContactSection />
+      <PrivacySummary />
+      <SiteFooter />
     </div>
   </>
 );
