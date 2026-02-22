@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { WizardLayout } from "@/components/wizard/WizardLayout";
 import { S1OrientationPage } from "@/components/stages/s1/S1OrientationPage";
 import { S2ValuesPage } from "@/components/stages/s2/S2ValuesPage";
+import { S3AptitudesPage } from "@/components/stages/s3/S3AptitudesPage";
 import { useWizardStore, STAGES } from "@/store/wizardStore";
 
 const Index: React.FC = () => {
@@ -9,11 +10,13 @@ const Index: React.FC = () => {
   const { currentStage } = useWizardStore();
 
   return (
-    <WizardLayout canContinue={canContinue} hideStageNav={currentStage === 1 || currentStage === 2}>
+    <WizardLayout canContinue={canContinue} hideStageNav={currentStage === 1 || currentStage === 2 || currentStage === 3}>
       {currentStage === 1 ? (
         <S1OrientationPage onValidityChange={setCanContinue} />
       ) : currentStage === 2 ? (
         <S2ValuesPage onValidityChange={setCanContinue} />
+      ) : currentStage === 3 ? (
+        <S3AptitudesPage onValidityChange={setCanContinue} />
       ) : (
         <div className="flex flex-col gap-6">
           <p
