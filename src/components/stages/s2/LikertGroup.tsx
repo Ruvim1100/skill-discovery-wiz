@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { cn } from "@/lib/utils";
 import { LikertScale } from "@/components/wizard/LikertScale";
 import { Progress } from "@/components/ui/progress";
 import type { LikertQuestion } from "./constants";
@@ -43,32 +44,46 @@ export const LikertGroup: React.FC<LikertGroupProps> = ({
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-xl font-semibold text-foreground">
-          A few questions about your values
+          How do these statements resonate with you?
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Rate how much you agree with each statement
+          Rate how much you agree with each statement — there are no right or wrong answers.
         </p>
       </div>
 
       {/* Progress */}
-      <div className="flex flex-col gap-1">
-        <p className="text-xs text-muted-foreground" aria-live="polite">
-          {answered} of {total} questions answered
-        </p>
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-medium text-muted-foreground" aria-live="polite">
+            {answered} of {total} answered
+          </p>
+          {answered === total && (
+            <span className="text-xs font-medium text-success">All done ✓</span>
+          )}
+        </div>
         <Progress value={progressPct} className="h-2" />
       </div>
 
       {/* Questions */}
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         {shuffled.map((q, i) => (
-          <LikertScale
+          <div
             key={q.id}
-            questionId={q.id}
-            questionText={q.text}
-            questionNumber={i + 1}
-            value={responses[q.id] ?? null}
-            onChange={onChange}
-          />
+            className={cn(
+              "rounded-lg border p-4 transition-colors duration-150",
+              responses[q.id] != null
+                ? "border-primary/20 bg-primary/[0.03]"
+                : "border-border bg-card"
+            )}
+          >
+            <LikertScale
+              questionId={q.id}
+              questionText={q.text}
+              questionNumber={i + 1}
+              value={responses[q.id] ?? null}
+              onChange={onChange}
+            />
+          </div>
         ))}
       </div>
     </div>
