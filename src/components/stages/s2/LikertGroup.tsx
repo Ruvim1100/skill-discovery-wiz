@@ -8,6 +8,8 @@ interface LikertGroupProps {
   questions: LikertQuestion[];
   responses: Record<string, number | null>;
   onChange: (questionId: string, value: number) => void;
+  heading?: string;
+  subheading?: string;
 }
 
 /** Shuffles within each group, then concatenates groups in order. Stable per mount. */
@@ -19,7 +21,6 @@ function shuffleWithinGroups(questions: LikertQuestion[]): LikertQuestion[] {
   }
   const result: LikertQuestion[] = [];
   for (const [, groupQs] of groups) {
-    // Fisher-Yates shuffle
     const arr = [...groupQs];
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -34,6 +35,8 @@ export const LikertGroup: React.FC<LikertGroupProps> = ({
   questions,
   responses,
   onChange,
+  heading = "How do these statements resonate with you?",
+  subheading = "Rate how much you agree with each statement — there are no right or wrong answers.",
 }) => {
   const shuffled = useMemo(() => shuffleWithinGroups(questions), []);
   const answered = shuffled.filter((q) => responses[q.id] != null).length;
@@ -43,12 +46,8 @@ export const LikertGroup: React.FC<LikertGroupProps> = ({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-xl font-semibold text-foreground">
-          How do these statements resonate with you?
-        </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Rate how much you agree with each statement — there are no right or wrong answers.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground">{heading}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{subheading}</p>
       </div>
 
       {/* Progress */}
@@ -65,14 +64,14 @@ export const LikertGroup: React.FC<LikertGroupProps> = ({
       </div>
 
       {/* Questions */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         {shuffled.map((q, i) => (
           <div
             key={q.id}
             className={cn(
-              "rounded-lg border p-4 transition-colors duration-150",
+              "rounded-lg border p-4 transition-all duration-200",
               responses[q.id] != null
-                ? "border-primary/20 bg-primary/[0.03]"
+                ? "border-primary/20 bg-primary-subtle"
                 : "border-border bg-card"
             )}
           >

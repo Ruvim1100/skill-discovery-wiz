@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 import type { ScenarioQuestion } from "./constants";
 
 interface BehavioralScenarioProps {
@@ -16,9 +17,16 @@ export const BehavioralScenario: React.FC<BehavioralScenarioProps> = ({
   onChange,
 }) => {
   return (
-    <fieldset className="flex flex-col gap-4" role="radiogroup" aria-label={`Scenario ${questionNumber}`}>
+    <fieldset
+      className={cn(
+        "flex flex-col gap-4 rounded-lg border p-5 transition-colors duration-200",
+        value != null ? "border-primary/20 bg-primary-subtle" : "border-border bg-card"
+      )}
+      role="radiogroup"
+      aria-label={`Scenario ${questionNumber}`}
+    >
       <legend className="text-sm font-medium text-foreground leading-relaxed" style={{ maxWidth: 600, lineHeight: 1.6 }}>
-        <span className="text-muted-foreground mr-1.5">Scenario {questionNumber}.</span>
+        <span className="font-semibold text-primary mr-1.5">Scenario {questionNumber}.</span>
         {scenario.text}
       </legend>
 
@@ -33,30 +41,30 @@ export const BehavioralScenario: React.FC<BehavioralScenarioProps> = ({
               aria-checked={isSelected}
               onClick={() => onChange(scenario.id, opt.letter)}
               className={cn(
-                "flex items-start gap-3 rounded-lg border-2 p-4 text-left transition-all duration-150 ease-out min-h-[44px]",
+                "flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-all duration-200 ease-out min-h-[44px]",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 isSelected
-                  ? "border-primary bg-primary/5"
-                  : "border-border bg-card hover:border-primary/40"
+                  ? "border-primary bg-primary/5 shadow-sm"
+                  : "border-border bg-background hover:border-primary/40 hover:bg-muted/50"
               )}
-              style={isSelected ? { borderColor: "var(--primary)" } : undefined}
             >
               <span
                 className={cn(
-                  "flex items-center justify-center h-7 w-7 rounded-full text-xs font-bold shrink-0 mt-0.5",
+                  "flex items-center justify-center h-8 w-8 rounded-full text-xs font-bold shrink-0 transition-all duration-200",
                   isSelected
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "bg-muted text-muted-foreground"
                 )}
-                style={isSelected ? {
-                  backgroundColor: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                } : undefined}
                 aria-hidden="true"
               >
-                {opt.letter}
+                {isSelected ? <Check size={14} strokeWidth={3} /> : opt.letter}
               </span>
-              <span className="text-sm text-foreground leading-snug pt-0.5">{opt.text}</span>
+              <span className={cn(
+                "text-sm leading-snug transition-colors",
+                isSelected ? "text-foreground font-medium" : "text-foreground"
+              )}>
+                {opt.text}
+              </span>
             </button>
           );
         })}
@@ -76,22 +84,44 @@ export const BehavioralScenarioGroup: React.FC<BehavioralScenarioGroupProps> = (
   scenarios,
   responses,
   onChange,
-}) => (
-  <div className="flex flex-col gap-6">
-    <div>
-      <h2 className="text-xl font-semibold text-foreground">How would you respond?</h2>
-      <p className="text-sm text-muted-foreground mt-1">
-        Choose the option that feels most natural to you
-      </p>
+}) => {
+  const answered = scenarios.filter((s) => responses[s.id] != null).length;
+
+  return (
+    <div className="flex flex-col gap-5">
+      <div>
+        <h2 className="text-xl font-semibold text-foreground">How would you respond?</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Choose the option that feels most natural to you
+        </p>
+        <div className="flex items-center gap-2 mt-2">
+          {scenarios.map((s, i) => (
+            <div
+              key={s.id}
+              className={cn(
+                "h-2 flex-1 rounded-full transition-all duration-300",
+                responses[s.id] != null ? "bg-primary" : "bg-border"
+              )}
+            />
+          ))}
+          <span className={cn(
+            "text-xs font-semibold tabular-nums ml-1",
+            answered === scenarios.length ? "text-success" : "text-muted-foreground"
+          )}>
+            {answered}/{scenarios.length}
+          </span>
+        </div>
+      </div>
+
+      {scenarios.map((s, i) => (
+        <BehavioralScenario
+          key={s.id}
+          scenario={s}
+          questionNumber={i + 1}
+          value={responses[s.id] ?? null}
+          onChange={onChange}
+        />
+      ))}
     </div>
-    {scenarios.map((s, i) => (
-      <BehavioralScenario
-        key={s.id}
-        scenario={s}
-        questionNumber={i + 1}
-        value={responses[s.id] ?? null}
-        onChange={onChange}
-      />
-    ))}
-  </div>
-);
+  );
+};
