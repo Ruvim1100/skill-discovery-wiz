@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { Pencil, Trash2, Plus, X, Check } from "lucide-react";
+import { Pencil, Trash2, Plus, X, Check, GraduationCap, Briefcase, Wrench, Users, FolderOpen, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -47,7 +47,8 @@ const EditableCell: React.FC<{
   value: string;
   editing: boolean;
   onSave: (v: string) => void;
-}> = ({ value, editing, onSave }) => {
+  placeholder?: string;
+}> = ({ value, editing, onSave, placeholder }) => {
   const [draft, setDraft] = useState(value);
 
   if (!editing) return <span className="text-sm text-foreground">{value || "—"}</span>;
@@ -62,6 +63,7 @@ const EditableCell: React.FC<{
       }}
       onBlur={() => onSave(draft)}
       autoFocus
+      placeholder={placeholder}
       className="h-8 text-sm"
     />
   );
@@ -89,13 +91,13 @@ const TagChips: React.FC<{
       {items.map((item) => (
         <span
           key={item}
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border bg-muted text-foreground"
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border bg-primary-subtle text-foreground"
         >
           {item}
           <button
             type="button"
             onClick={() => onChange(items.filter((i) => i !== item))}
-            className="ml-0.5 rounded-full hover:bg-destructive/10 p-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="ml-0.5 rounded-full hover:bg-destructive/10 p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={`Remove ${item}`}
           >
             <X size={12} />
@@ -121,7 +123,7 @@ const TagChips: React.FC<{
         <button
           type="button"
           onClick={() => setAdding(true)}
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border border-dashed text-muted-foreground hover:text-foreground hover:border-primary/50 min-h-[32px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border border-dashed text-muted-foreground hover:text-primary hover:border-primary/50 min-h-[32px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Plus size={12} /> Add
         </button>
@@ -133,21 +135,34 @@ const TagChips: React.FC<{
 // ── Section Wrapper ─────────────────────────────────────────
 const Section: React.FC<{
   title: string;
+  icon: React.ReactNode;
   editing: boolean;
   onToggleEdit: () => void;
   children: React.ReactNode;
-}> = ({ title, editing, onToggleEdit, children }) => (
-  <div className="flex flex-col gap-2 rounded-lg border p-4 bg-card" style={{ borderColor: "var(--border)" }}>
+  showEditButton?: boolean;
+}> = ({ title, icon, editing, onToggleEdit, children, showEditButton = true }) => (
+  <div className="flex flex-col gap-3 rounded-lg border p-4 bg-card transition-colors hover:border-primary/20">
     <div className="flex items-center justify-between">
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      <button
-        type="button"
-        onClick={onToggleEdit}
-        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        aria-label={editing ? `Done editing ${title}` : `Edit ${title}`}
-      >
-        {editing ? <Check size={16} className="text-primary" /> : <Pencil size={14} className="text-muted-foreground" />}
-      </button>
+      <div className="flex items-center gap-2">
+        <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+          <span className="text-primary">{icon}</span>
+        </div>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+      </div>
+      {showEditButton && (
+        <button
+          type="button"
+          onClick={onToggleEdit}
+          className={cn(
+            "min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md transition-colors",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            editing ? "bg-primary/10 hover:bg-primary/15" : "hover:bg-muted"
+          )}
+          aria-label={editing ? `Done editing ${title}` : `Edit ${title}`}
+        >
+          {editing ? <Check size={16} className="text-primary" /> : <Pencil size={14} className="text-muted-foreground" />}
+        </button>
+      )}
     </div>
     {children}
   </div>
@@ -190,7 +205,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
       </div>
 
       {/* Education */}
-      <Section title="Education" editing={isEditing("edu")} onToggleEdit={() => toggleEdit("edu")}>
+      <Section title="Education" icon={<GraduationCap size={14} />} editing={isEditing("edu")} onToggleEdit={() => toggleEdit("edu")}>
         {data.education.length === 0 ? (
           <p className="text-xs text-muted-foreground">No education entries found</p>
         ) : (
@@ -198,16 +213,16 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
             {data.education.map((e, i) => (
               <div key={e.id} className="flex items-start gap-2">
                 <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-                  <EditableCell value={e.degree} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "degree", v)} />
-                  <EditableCell value={e.field} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "field", v)} />
-                  <EditableCell value={e.institution} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "institution", v)} />
-                  <EditableCell value={e.year} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "year", v)} />
+                  <EditableCell value={e.degree} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "degree", v)} placeholder="Degree" />
+                  <EditableCell value={e.field} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "field", v)} placeholder="Field" />
+                  <EditableCell value={e.institution} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "institution", v)} placeholder="Institution" />
+                  <EditableCell value={e.year} editing={isEditing("edu")} onSave={(v) => updateEducation(i, "year", v)} placeholder="Year" />
                 </div>
                 {isEditing("edu") && (
                   <button
                     type="button"
                     onClick={() => onChange({ ...data, education: data.education.filter((_, j) => j !== i) })}
-                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Delete education entry"
                   >
                     <Trash2 size={14} className="text-destructive" />
@@ -223,10 +238,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
             variant="outline"
             size="sm"
             onClick={() =>
-              onChange({
-                ...data,
-                education: [...data.education, { id: genId(), degree: "", field: "", institution: "", year: "" }],
-              })
+              onChange({ ...data, education: [...data.education, { id: genId(), degree: "", field: "", institution: "", year: "" }] })
             }
             className="self-start mt-1 min-h-[44px]"
           >
@@ -236,24 +248,24 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
       </Section>
 
       {/* Experience */}
-      <Section title="Experience" editing={isEditing("exp")} onToggleEdit={() => toggleEdit("exp")}>
+      <Section title="Experience" icon={<Briefcase size={14} />} editing={isEditing("exp")} onToggleEdit={() => toggleEdit("exp")}>
         {data.experience.length === 0 ? (
           <p className="text-xs text-muted-foreground">No experience entries found</p>
         ) : (
           <div className="flex flex-col gap-3">
             {data.experience.map((e, i) => (
-              <div key={e.id} className="flex flex-col gap-1 rounded border p-3" style={{ borderColor: "var(--border)" }}>
+              <div key={e.id} className="flex flex-col gap-1 rounded-md border p-3 bg-muted/30">
                 <div className="flex items-start justify-between">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1">
-                    <EditableCell value={e.title} editing={isEditing("exp")} onSave={(v) => updateExperience(i, "title", v)} />
-                    <EditableCell value={e.company} editing={isEditing("exp")} onSave={(v) => updateExperience(i, "company", v)} />
-                    <EditableCell value={e.duration} editing={isEditing("exp")} onSave={(v) => updateExperience(i, "duration", v)} />
+                    <EditableCell value={e.title} editing={isEditing("exp")} onSave={(v) => updateExperience(i, "title", v)} placeholder="Title" />
+                    <EditableCell value={e.company} editing={isEditing("exp")} onSave={(v) => updateExperience(i, "company", v)} placeholder="Company" />
+                    <EditableCell value={e.duration} editing={isEditing("exp")} onSave={(v) => updateExperience(i, "duration", v)} placeholder="Duration" />
                   </div>
                   {isEditing("exp") && (
                     <button
                       type="button"
                       onClick={() => onChange({ ...data, experience: data.experience.filter((_, j) => j !== i) })}
-                      className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label="Delete experience entry"
                     >
                       <Trash2 size={14} className="text-destructive" />
@@ -261,7 +273,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
                   )}
                 </div>
                 {e.responsibilities.length > 0 && (
-                  <ul className="list-disc list-inside text-xs text-muted-foreground mt-1">
+                  <ul className="list-disc list-inside text-xs text-muted-foreground mt-1 space-y-0.5">
                     {e.responsibilities.map((r, ri) => (
                       <li key={ri}>{r}</li>
                     ))}
@@ -279,10 +291,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
             onClick={() =>
               onChange({
                 ...data,
-                experience: [
-                  ...data.experience,
-                  { id: genId(), title: "", company: "", duration: "", responsibilities: [] },
-                ],
+                experience: [...data.experience, { id: genId(), title: "", company: "", duration: "", responsibilities: [] }],
               })
             }
             className="self-start mt-1 min-h-[44px]"
@@ -293,17 +302,17 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
       </Section>
 
       {/* Hard Skills */}
-      <Section title="Hard Skills" editing={false} onToggleEdit={() => {}}>
+      <Section title="Hard Skills" icon={<Wrench size={14} />} editing={false} onToggleEdit={() => {}} showEditButton={false}>
         <TagChips items={data.hardSkills} onChange={(v) => onChange({ ...data, hardSkills: v })} />
       </Section>
 
       {/* Soft Skills */}
-      <Section title="Soft Skills" editing={false} onToggleEdit={() => {}}>
+      <Section title="Soft Skills" icon={<Users size={14} />} editing={false} onToggleEdit={() => {}} showEditButton={false}>
         <TagChips items={data.softSkills} onChange={(v) => onChange({ ...data, softSkills: v })} />
       </Section>
 
       {/* Projects */}
-      <Section title="Projects" editing={isEditing("proj")} onToggleEdit={() => toggleEdit("proj")}>
+      <Section title="Projects" icon={<FolderOpen size={14} />} editing={isEditing("proj")} onToggleEdit={() => toggleEdit("proj")}>
         {data.projects.length === 0 ? (
           <p className="text-xs text-muted-foreground">No projects found</p>
         ) : (
@@ -319,6 +328,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
                       updated[i] = { ...updated[i], name: v };
                       onChange({ ...data, projects: updated });
                     }}
+                    placeholder="Project name"
                   />
                   <span className="text-xs text-muted-foreground">{p.description || "—"}</span>
                 </div>
@@ -326,7 +336,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
                   <button
                     type="button"
                     onClick={() => onChange({ ...data, projects: data.projects.filter((_, j) => j !== i) })}
-                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Delete project"
                   >
                     <Trash2 size={14} className="text-destructive" />
@@ -352,7 +362,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
       </Section>
 
       {/* Awards */}
-      <Section title="Awards & Certifications" editing={false} onToggleEdit={() => {}}>
+      <Section title="Awards & Certifications" icon={<Award size={14} />} editing={false} onToggleEdit={() => {}} showEditButton={false}>
         <TagChips items={data.awards} onChange={(v) => onChange({ ...data, awards: v })} />
       </Section>
     </div>

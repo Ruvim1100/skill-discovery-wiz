@@ -4,14 +4,12 @@ import { StageTransition } from "@/components/wizard/StageTransition";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
-import { LikertScale } from "@/components/wizard/LikertScale";
-import { Progress } from "@/components/ui/progress";
+import { LikertGroup } from "@/components/stages/s2/LikertGroup";
 import { ResumeUpload } from "./ResumeUpload";
 import { GdprConsent } from "./GdprConsent";
 import { ParsedDataReview, type ParsedResumeData } from "./ParsedDataReview";
 import { BehavioralScenarioGroup } from "./BehavioralScenario";
 import { S3_LIKERT_QUESTIONS, SCENARIOS, type CareerStage } from "./constants";
-import type { LikertQuestion } from "@/components/stages/s2/constants";
 
 const STORAGE_KEY = "yourvue-s3-data";
 
@@ -52,25 +50,6 @@ const loadData = (): S3Data => {
   };
 };
 
-// Shuffle within factor groups, stable per mount
-function shuffleWithinGroups(questions: LikertQuestion[]): LikertQuestion[] {
-  const groups = new Map<string, LikertQuestion[]>();
-  for (const q of questions) {
-    if (!groups.has(q.group)) groups.set(q.group, []);
-    groups.get(q.group)!.push(q);
-  }
-  const result: LikertQuestion[] = [];
-  for (const [, groupQs] of groups) {
-    const arr = [...groupQs];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    result.push(...arr);
-  }
-  return result;
-}
-
 const LOADING_MESSAGES = [
   "Analyzing your resume...",
   "Extracting skills...",
@@ -78,7 +57,6 @@ const LOADING_MESSAGES = [
   "Mapping education...",
 ];
 
-// Mock parsed data for demo
 const MOCK_PARSED: ParsedResumeData = {
   education: [
     { id: "e1", degree: "BSc", field: "Computer Science", institution: "University of London", year: "2019" },
@@ -115,7 +93,7 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
   const { goToNextStage } = useWizardStore();
   const [subStep, setSubStep] = useState<1 | 2 | 3 | 4>(() => {
     const d = loadData();
-    if (d.parsingDone) return 2; // resume already parsed, start at review
+    if (d.parsingDone) return 2;
     return 1;
   });
   const [data, setData] = useState<S3Data>(loadData);
@@ -124,7 +102,6 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
   const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
   const [loadingElapsed, setLoadingElapsed] = useState(0);
 
-  // Get career stage from S1
   const careerStage = useMemo<CareerStage>(() => {
     try {
       const s1 = localStorage.getItem("yourvue-s1-data");
@@ -138,13 +115,9 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
 
   const scenarios = SCENARIOS[careerStage];
 
-  // Shuffled likert questions (stable per mount)
-  const shuffledQuestions = useMemo(() => shuffleWithinGroups(S3_LIKERT_QUESTIONS), []);
-
   // Persist
   useEffect(() => {
-    const { ...rest } = data;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
 
   // Hide parent nav
@@ -174,7 +147,6 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
     setParsing(true);
     setLoadingElapsed(0);
     setLoadingMsgIdx(0);
-    // Simulate parsing
     setTimeout(() => {
       setData((prev) => ({
         ...prev,
@@ -211,14 +183,13 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
     }));
   }, []);
 
-  const likertAnswered = shuffledQuestions.filter((q) => data.likertResponses[q.id] != null).length;
-  const allLikertDone = likertAnswered === shuffledQuestions.length;
+  const allLikertDone = S3_LIKERT_QUESTIONS.every((q) => data.likertResponses[q.id] != null);
   const allScenariosDone = scenarios.every((s) => data.scenarioResponses[s.id] != null);
 
   const canContinue = (() => {
     switch (subStep) {
-      case 1: return false; // handled by Analyze button
-      case 2: return true; // review is always continuable
+      case 1: return false;
+      case 2: return true;
       case 3: return allLikertDone;
       case 4: return allScenariosDone;
       default: return false;
@@ -242,10 +213,13 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
     return (
       <div className="flex flex-col gap-6 py-8">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 size={32} className="animate-spin text-primary" />
+          <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <Loader2 size={28} className="animate-spin text-primary" />
+          </div>
           <p className="text-sm font-medium text-foreground" aria-live="polite">
             {LOADING_MESSAGES[loadingMsgIdx]}
           </p>
+          <p className="text-xs text-muted-foreground">This usually takes a few seconds</p>
         </div>
         <div className="flex flex-col gap-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -297,10 +271,6 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
                 onClick={handleAnalyze}
                 disabled={!canAnalyze}
                 className="min-h-[44px] px-6"
-                style={canAnalyze ? {
-                  backgroundColor: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                } : undefined}
               >
                 Analyze Resume
               </Button>
@@ -316,34 +286,13 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
         )}
 
         {subStep === 3 && (
-          <div className="flex flex-col gap-6">
-            <div>
-              <h2 className="text-xl font-semibold text-foreground">
-                Rate your aptitudes
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Rate how much you agree with each statement
-              </p>
-            </div>
-            <div className="flex flex-col gap-1">
-              <p className="text-xs text-muted-foreground" aria-live="polite">
-                {likertAnswered} of {shuffledQuestions.length} questions answered
-              </p>
-              <Progress value={(likertAnswered / shuffledQuestions.length) * 100} className="h-2" />
-            </div>
-            <div className="flex flex-col gap-6">
-              {shuffledQuestions.map((q, i) => (
-                <LikertScale
-                  key={q.id}
-                  questionId={q.id}
-                  questionText={q.text}
-                  questionNumber={i + 1}
-                  value={data.likertResponses[q.id] ?? null}
-                  onChange={handleLikertChange}
-                />
-              ))}
-            </div>
-          </div>
+          <LikertGroup
+            questions={S3_LIKERT_QUESTIONS}
+            responses={data.likertResponses}
+            onChange={handleLikertChange}
+            heading="Rate your aptitudes"
+            subheading="Rate how much you agree with each statement — there are no right or wrong answers."
+          />
         )}
 
         {subStep === 4 && (
@@ -358,25 +307,19 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
       {/* Navigation */}
       {subStep !== 1 && (
         <div className="flex justify-between items-center pt-2">
-          <div>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleBack}
-              className="min-h-[44px]"
-            >
-              Back
-            </Button>
-          </div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleBack}
+            className="min-h-[44px]"
+          >
+            Back
+          </Button>
           <Button
             type="button"
             onClick={handleContinue}
             disabled={!canContinue}
             className="min-h-[44px] px-6"
-            style={canContinue ? {
-              backgroundColor: "var(--primary)",
-              color: "var(--primary-foreground)",
-            } : undefined}
           >
             {subStep === 2 ? "Confirm & Continue" : subStep === 4 ? "Continue to Interests" : "Continue"}
           </Button>
@@ -388,10 +331,10 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
         {[1, 2, 3, 4].map((s) => (
           <div
             key={s}
-            className="h-1.5 rounded-full transition-all duration-200"
+            className="h-1.5 rounded-full transition-all duration-300"
             style={{
               width: s === subStep ? 24 : 8,
-              backgroundColor: s === subStep ? "var(--primary)" : "var(--border)",
+              backgroundColor: s <= subStep ? "var(--primary)" : "var(--border)",
             }}
             aria-hidden="true"
           />

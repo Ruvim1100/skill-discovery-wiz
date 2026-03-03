@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check, Star } from "lucide-react";
 
 interface ValueWithCategory {
   name: string;
@@ -8,9 +8,7 @@ interface ValueWithCategory {
 }
 
 interface ValueRefinementProps {
-  /** All 14 selected values (7 categories × 2) */
   allValues: ValueWithCategory[];
-  /** Currently chosen core values (max 3) */
   coreValues: ValueWithCategory[];
   onChange: (coreValues: ValueWithCategory[]) => void;
 }
@@ -32,20 +30,36 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
     }
   };
 
+  const count = coreValues.length;
+  const isComplete = count === 3;
+
   return (
-    <div className="flex flex-col gap-4">
-      <div>
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-1.5">
         <h2 className="text-xl font-semibold text-foreground">Choose your 3 core values</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-muted-foreground">
           From your 14 selections, which 3 matter most to you?
         </p>
-        <p
-          className="text-xs mt-2 font-medium"
-          style={{ color: coreValues.length === 3 ? "var(--success)" : "var(--muted-foreground)" }}
-          aria-live="polite"
-        >
-          {coreValues.length}/3 core values selected
-        </p>
+        <div className="flex items-center gap-2 mt-1">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className={cn(
+                "h-2 flex-1 rounded-full transition-all duration-300",
+                i <= count ? "bg-primary" : "bg-border"
+              )}
+            />
+          ))}
+          <span
+            className={cn(
+              "text-xs font-semibold tabular-nums ml-1 transition-colors",
+              isComplete ? "text-success" : "text-muted-foreground"
+            )}
+            aria-live="polite"
+          >
+            {count}/3
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -61,29 +75,39 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
               disabled={disabled}
               aria-pressed={selected}
               className={cn(
-                "relative rounded-lg border-2 p-4 text-left transition-all duration-150 ease-out",
+                "group relative rounded-lg border-2 p-4 text-left transition-all duration-200 ease-out",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                "min-h-[44px]",
+                "min-h-[72px]",
                 selected
-                  ? "border-primary bg-primary/5"
-                  : "border-border bg-card hover:border-primary/40",
-                disabled && "opacity-40 cursor-not-allowed"
+                  ? "border-primary bg-primary-subtle shadow-md"
+                  : "border-border bg-card hover:border-primary/40 hover:shadow-sm",
+                disabled && "opacity-35 cursor-not-allowed hover:border-border hover:shadow-none"
               )}
-              style={selected ? { borderColor: "var(--primary)" } : undefined}
             >
-              {selected && (
-                <div
-                  className="absolute top-3 right-3 h-5 w-5 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "var(--primary)" }}
-                  aria-hidden="true"
-                >
-                  <Check size={12} strokeWidth={3} color="var(--primary-foreground)" />
-                </div>
-              )}
-              <p className={cn("text-sm font-semibold", selected ? "text-foreground" : "text-foreground")}>
+              {/* Selection indicator */}
+              <div
+                className={cn(
+                  "absolute top-3 right-3 h-6 w-6 rounded-full flex items-center justify-center transition-all duration-200",
+                  selected
+                    ? "bg-primary scale-100"
+                    : "border-2 border-border bg-background scale-90 group-hover:border-primary/40"
+                )}
+                aria-hidden="true"
+              >
+                {selected ? (
+                  <Check size={14} strokeWidth={3} className="text-primary-foreground" />
+                ) : (
+                  <Star size={10} className="text-muted-foreground/50" />
+                )}
+              </div>
+
+              <p className={cn(
+                "text-sm font-semibold pr-8 transition-colors",
+                selected ? "text-primary" : "text-foreground"
+              )}>
                 {v.name}
               </p>
-              <p className="text-xs text-muted-foreground mt-0.5">{v.category}</p>
+              <p className="text-xs text-muted-foreground mt-1">{v.category}</p>
             </button>
           );
         })}
