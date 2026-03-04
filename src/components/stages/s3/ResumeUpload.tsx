@@ -98,8 +98,8 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
 
         <TabsContent value="upload" className="mt-3">
           {file ? (
-            <div className="flex items-center gap-3 rounded-lg border border-success/30 bg-success-subtle p-4">
-              <div className="h-10 w-10 rounded-lg bg-success/10 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 rounded-lg border border-success bg-success-subtle p-4">
+              <div className="h-10 w-10 rounded-lg bg-success-subtle flex items-center justify-center shrink-0">
                 <CheckCircle2 size={20} className="text-success" aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
@@ -109,7 +109,7 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
               <button
                 type="button"
                 onClick={() => { onFileChange(null); setError(null); }}
-                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md hover:bg-destructive-subtle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label="Remove file"
               >
                 <X size={18} className="text-muted-foreground" />
@@ -134,12 +134,12 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 dragOver
                   ? "border-primary bg-primary-subtle scale-[1.01]"
-                  : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  : "border-border hover:border-primary hover:bg-muted"
               )}
             >
               <div className={cn(
                 "h-12 w-12 rounded-full flex items-center justify-center transition-colors duration-200",
-                dragOver ? "bg-primary/10" : "bg-muted"
+                dragOver ? "bg-primary-subtle" : "bg-muted"
               )}>
                 <Upload size={22} className={cn(
                   "transition-colors",

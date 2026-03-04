@@ -213,7 +213,7 @@ export const S3AptitudesPage: React.FC<S3AptitudesPageProps> = ({ onValidityChan
     return (
       <div className="flex flex-col gap-6 py-8">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="h-14 w-14 rounded-full bg-primary-subtle flex items-center justify-center">
             <Loader2 size={28} className="animate-spin text-primary" />
           </div>
           <p className="text-sm font-medium text-foreground" aria-live="polite">

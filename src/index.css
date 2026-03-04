@@ -51,6 +51,7 @@
     --warning-subtle: oklch(0.97 0.05 70);
     --info: oklch(0.65 0.15 220);
     --info-foreground: oklch(0.99 0 0);
+    --destructive-subtle: oklch(0.97 0.03 28);
 
     /* Borders / inputs */
     --border: oklch(0.92 0 0);
