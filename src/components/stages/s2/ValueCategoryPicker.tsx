@@ -88,7 +88,7 @@ export const ValueCategoryPicker: React.FC<ValueCategoryPickerProps> = ({
               value={cat.id}
               className={cn(
                 "rounded-lg border overflow-hidden transition-colors duration-200",
-                isComplete ? "border-success bg-success-subtle" : "border-border bg-card"
+                isComplete ? "border-success bg-card" : "border-border bg-card"
               )}
             >
               <AccordionTrigger className="px-4 py-3.5 hover:no-underline [&>svg]:hidden">

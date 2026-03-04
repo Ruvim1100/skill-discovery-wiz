@@ -71,8 +71,8 @@ export const LikertGroup: React.FC<LikertGroupProps> = ({
             className={cn(
               "rounded-lg border p-4 transition-all duration-200",
               responses[q.id] != null
-                ? "border-primary bg-primary-subtle"
-                : "border-border bg-card"
+                ? "border-primary"
+                : "border-border"
             )}
           >
             <LikertScale
