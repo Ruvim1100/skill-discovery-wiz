@@ -72,8 +72,8 @@ export const LikertScale: React.FC<LikertScaleProps> = ({
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   POINT_SIZES[point],
                   isSelected
-                    ? "bg-primary text-primary-foreground shadow-md scale-110 ring-2 ring-primary/20"
-                    : "border-2 border-border bg-card text-muted-foreground hover:border-primary/40 hover:bg-primary-subtle"
+                    ? "bg-primary text-primary-foreground shadow-md scale-110 ring-2 ring-primary"
+                    : "border-2 border-border bg-card text-muted-foreground hover:border-primary hover:bg-primary-subtle"
                 )}
               >
                 <span className={cn("font-semibold", isSelected ? "text-sm" : "text-xs")}>

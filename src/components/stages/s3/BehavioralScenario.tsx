@@ -20,7 +20,7 @@ export const BehavioralScenario: React.FC<BehavioralScenarioProps> = ({
     <fieldset
       className={cn(
         "flex flex-col gap-4 rounded-lg border p-5 transition-colors duration-200",
-        value != null ? "border-primary/20 bg-primary-subtle" : "border-border bg-card"
+        value != null ? "border-primary bg-primary-subtle" : "border-border bg-card"
       )}
       role="radiogroup"
       aria-label={`Scenario ${questionNumber}`}
@@ -44,8 +44,8 @@ export const BehavioralScenario: React.FC<BehavioralScenarioProps> = ({
                 "flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-all duration-200 ease-out min-h-[44px]",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 isSelected
-                  ? "border-primary bg-primary/5 shadow-sm"
-                  : "border-border bg-background hover:border-primary/40 hover:bg-muted/50"
+                  ? "border-primary bg-primary-subtle shadow-sm"
+                  : "border-border bg-background hover:border-primary hover:bg-muted"
               )}
             >
               <span

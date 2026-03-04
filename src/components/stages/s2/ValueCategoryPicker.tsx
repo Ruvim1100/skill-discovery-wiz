@@ -88,7 +88,7 @@ export const ValueCategoryPicker: React.FC<ValueCategoryPickerProps> = ({
               value={cat.id}
               className={cn(
                 "rounded-lg border overflow-hidden transition-colors duration-200",
-                isComplete ? "border-success/30 bg-success-subtle" : "border-border bg-card"
+                isComplete ? "border-success bg-success-subtle" : "border-border bg-card"
               )}
             >
               <AccordionTrigger className="px-4 py-3.5 hover:no-underline [&>svg]:hidden">
@@ -116,7 +116,7 @@ export const ValueCategoryPicker: React.FC<ValueCategoryPickerProps> = ({
                     className={cn(
                       "text-xs font-medium px-2 py-0.5 rounded-full ml-auto mr-2 transition-colors duration-200",
                       isComplete
-                        ? "bg-success/15 text-success"
+                        ? "bg-success text-success-foreground"
                         : "bg-muted text-muted-foreground"
                     )}
                   >
@@ -151,7 +151,7 @@ export const ValueCategoryPicker: React.FC<ValueCategoryPickerProps> = ({
                           "active:scale-105",
                           isSelected
                             ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                            : "border-border bg-background text-foreground hover:border-primary/50 hover:bg-primary-subtle",
+                            : "border-border bg-background text-foreground hover:border-primary hover:bg-primary-subtle",
                           isDisabled && !isSelected && "opacity-35 cursor-not-allowed hover:bg-background hover:border-border"
                         )}
                       >

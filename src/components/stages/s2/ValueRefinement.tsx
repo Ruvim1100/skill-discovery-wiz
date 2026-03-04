@@ -80,7 +80,7 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
                 "min-h-[72px]",
                 selected
                   ? "border-primary bg-primary-subtle shadow-md"
-                  : "border-border bg-card hover:border-primary/40 hover:shadow-sm",
+                  : "border-border bg-card hover:border-primary hover:shadow-sm",
                 disabled && "opacity-35 cursor-not-allowed hover:border-border hover:shadow-none"
               )}
             >
@@ -90,7 +90,7 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
                   "absolute top-3 right-3 h-6 w-6 rounded-full flex items-center justify-center transition-all duration-200",
                   selected
                     ? "bg-primary scale-100"
-                    : "border-2 border-border bg-background scale-90 group-hover:border-primary/40"
+                    : "border-2 border-border bg-background scale-90 group-hover:border-primary"
                 )}
                 aria-hidden="true"
               >

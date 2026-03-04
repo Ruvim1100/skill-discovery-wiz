@@ -97,7 +97,7 @@ const TagChips: React.FC<{
           <button
             type="button"
             onClick={() => onChange(items.filter((i) => i !== item))}
-            className="ml-0.5 rounded-full hover:bg-destructive/10 p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="ml-0.5 rounded-full hover:bg-destructive-subtle p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={`Remove ${item}`}
           >
             <X size={12} />
@@ -123,7 +123,7 @@ const TagChips: React.FC<{
         <button
           type="button"
           onClick={() => setAdding(true)}
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border border-dashed text-muted-foreground hover:text-primary hover:border-primary/50 min-h-[32px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border border-dashed text-muted-foreground hover:text-primary hover:border-primary min-h-[32px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Plus size={12} /> Add
         </button>
@@ -141,10 +141,10 @@ const Section: React.FC<{
   children: React.ReactNode;
   showEditButton?: boolean;
 }> = ({ title, icon, editing, onToggleEdit, children, showEditButton = true }) => (
-  <div className="flex flex-col gap-3 rounded-lg border p-4 bg-card transition-colors hover:border-primary/20">
+  <div className="flex flex-col gap-3 rounded-lg border p-4 bg-card transition-colors hover:border-primary">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+        <div className="h-7 w-7 rounded-md bg-primary-subtle flex items-center justify-center shrink-0">
           <span className="text-primary">{icon}</span>
         </div>
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
@@ -156,7 +156,7 @@ const Section: React.FC<{
           className={cn(
             "min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-            editing ? "bg-primary/10 hover:bg-primary/15" : "hover:bg-muted"
+            editing ? "bg-primary-subtle hover:bg-primary-subtle" : "hover:bg-muted"
           )}
           aria-label={editing ? `Done editing ${title}` : `Edit ${title}`}
         >
@@ -222,7 +222,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
                   <button
                     type="button"
                     onClick={() => onChange({ ...data, education: data.education.filter((_, j) => j !== i) })}
-                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive-subtle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Delete education entry"
                   >
                     <Trash2 size={14} className="text-destructive" />
@@ -265,7 +265,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
                     <button
                       type="button"
                       onClick={() => onChange({ ...data, experience: data.experience.filter((_, j) => j !== i) })}
-                      className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive-subtle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-label="Delete experience entry"
                     >
                       <Trash2 size={14} className="text-destructive" />
@@ -336,7 +336,7 @@ export const ParsedDataReview: React.FC<ParsedDataReviewProps> = ({ data, onChan
                   <button
                     type="button"
                     onClick={() => onChange({ ...data, projects: data.projects.filter((_, j) => j !== i) })}
-                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-destructive-subtle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Delete project"
                   >
                     <Trash2 size={14} className="text-destructive" />

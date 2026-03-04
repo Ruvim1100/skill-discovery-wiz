@@ -38,6 +38,7 @@ export default {
         destructive: {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
+          subtle: "var(--destructive-subtle)",
         },
         muted: {
           DEFAULT: "var(--muted)",

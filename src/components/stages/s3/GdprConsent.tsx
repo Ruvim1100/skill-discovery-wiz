@@ -19,7 +19,7 @@ export const GdprConsent: React.FC<GdprConsentProps> = ({ consented, onChange })
   return (
     <div className={cn(
       "flex flex-col gap-3 rounded-lg border p-4 transition-colors duration-200",
-      consented ? "border-success/30 bg-success-subtle" : "border-border bg-card"
+      consented ? "border-success bg-success-subtle" : "border-border bg-card"
     )}>
       <div className="flex items-start gap-3">
         <Checkbox
