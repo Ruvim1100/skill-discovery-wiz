@@ -79,7 +79,7 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 "min-h-[72px]",
                 selected
-                  ? "border-primary bg-primary-subtle shadow-md"
+                  ? "border-primary bg-card shadow-md"
                   : "border-border bg-card hover:border-primary hover:shadow-sm",
                 disabled && "opacity-35 cursor-not-allowed hover:border-border hover:shadow-none"
               )}
