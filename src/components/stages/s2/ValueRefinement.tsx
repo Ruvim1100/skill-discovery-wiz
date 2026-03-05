@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Check, Star } from "lucide-react";
+import { Check } from "lucide-react";
 
 interface ValueWithCategory {
   name: string;
@@ -35,34 +35,14 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1.5">
-        <h2 className="text-xl font-semibold text-foreground">Choose your 3 core values</h2>
-        <p className="text-sm text-muted-foreground">
-          From your 14 selections, which 3 matter most to you?
+      <div>
+        <h2 className="text-xl font-bold text-foreground">Choose Your 3 Core Values</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          From your selected values, pick the 3 that matter most to you.
         </p>
-        <div className="flex items-center gap-2 mt-1">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className={cn(
-                "h-2 flex-1 rounded-full transition-all duration-300",
-                i <= count ? "bg-primary" : "bg-border"
-              )}
-            />
-          ))}
-          <span
-            className={cn(
-              "text-xs font-semibold tabular-nums ml-1 transition-colors",
-              isComplete ? "text-success" : "text-muted-foreground"
-            )}
-            aria-live="polite"
-          >
-            {count}/3
-          </span>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {allValues.map((v) => {
           const selected = isCore(v);
           const disabled = !selected && coreValues.length >= 3;
@@ -75,34 +55,31 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
               disabled={disabled}
               aria-pressed={selected}
               className={cn(
-                "group relative rounded-lg border-2 p-4 text-left transition-all duration-200 ease-out",
+                "group relative rounded-xl border p-4 text-left transition-all duration-200 ease-out",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                "min-h-[72px]",
+                "min-h-[80px]",
                 selected
-                  ? "border-primary bg-card shadow-md"
-                  : "border-border bg-card hover:border-primary hover:shadow-sm",
-                disabled && "opacity-35 cursor-not-allowed hover:border-border hover:shadow-none"
+                  ? "border-primary bg-primary-subtle"
+                  : "border-border bg-card hover:border-muted-foreground",
+                disabled && "opacity-30 cursor-not-allowed hover:border-border"
               )}
             >
-              {/* Selection indicator */}
+              {/* Checkmark circle — top right */}
               <div
                 className={cn(
                   "absolute top-3 right-3 h-6 w-6 rounded-full flex items-center justify-center transition-all duration-200",
                   selected
-                    ? "bg-primary scale-100"
-                    : "border-2 border-border bg-background scale-90 group-hover:border-primary"
+                    ? "bg-primary"
+                    : "border-2 border-border"
                 )}
-                aria-hidden="true"
               >
-                {selected ? (
+                {selected && (
                   <Check size={14} strokeWidth={3} className="text-primary-foreground" />
-                ) : (
-                  <Star size={10} className="text-muted-foreground/50" />
                 )}
               </div>
 
               <p className={cn(
-                "text-sm font-semibold pr-8 transition-colors",
+                "text-sm font-semibold pr-8",
                 selected ? "text-primary" : "text-foreground"
               )}>
                 {v.name}
@@ -112,6 +89,14 @@ export const ValueRefinement: React.FC<ValueRefinementProps> = ({
           );
         })}
       </div>
+
+      {/* Bottom counter */}
+      <p className={cn(
+        "text-sm font-medium text-center",
+        isComplete ? "text-success" : "text-muted-foreground"
+      )}>
+        {count}/3 selected
+      </p>
     </div>
   );
 };

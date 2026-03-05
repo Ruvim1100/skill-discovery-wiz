@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { LikertScale } from "@/components/wizard/LikertScale";
-import { Progress } from "@/components/ui/progress";
 import type { LikertQuestion } from "./constants";
 
 interface LikertGroupProps {
@@ -41,38 +40,32 @@ export const LikertGroup: React.FC<LikertGroupProps> = ({
   const shuffled = useMemo(() => shuffleWithinGroups(questions), []);
   const answered = shuffled.filter((q) => responses[q.id] != null).length;
   const total = shuffled.length;
-  const progressPct = (answered / total) * 100;
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-xl font-semibold text-foreground">{heading}</h2>
+        <h2 className="text-xl font-bold text-foreground">{heading}</h2>
         <p className="text-sm text-muted-foreground mt-1">{subheading}</p>
       </div>
 
-      {/* Progress */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-medium text-muted-foreground" aria-live="polite">
-            {answered} of {total} answered
-          </p>
-          {answered === total && (
-            <span className="text-xs font-medium text-success">All done ✓</span>
-          )}
-        </div>
-        <Progress value={progressPct} className="h-2" />
+      {/* Progress counter — right-aligned */}
+      <div className="flex justify-end">
+        <span className={cn(
+          "text-sm font-medium",
+          answered === total ? "text-success" : "text-muted-foreground"
+        )}>
+          {answered} of {total} answered
+        </span>
       </div>
 
       {/* Questions */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {shuffled.map((q, i) => (
           <div
             key={q.id}
             className={cn(
-              "rounded-lg border p-4 transition-all duration-200",
-              responses[q.id] != null
-                ? "border-primary"
-                : "border-border"
+              "rounded-xl border p-5 transition-colors duration-200 bg-card",
+              responses[q.id] != null ? "border-border" : "border-border"
             )}
           >
             <LikertScale
