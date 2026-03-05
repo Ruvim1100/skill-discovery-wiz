@@ -1,15 +1,15 @@
 import React, { useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   Monitor, TrendingUp, GraduationCap, HeartPulse, Leaf, Palette,
   Wrench, Plane, Landmark, Users, ShoppingBag, Truck,
-  ChevronDown, Check,
+  Check,
 } from "lucide-react";
 import { INDUSTRY_CATEGORIES, type IndustryCategory } from "./constants";
 
@@ -23,7 +23,7 @@ interface IndustrySelectorProps {
   onChange: (categoryId: string, subfields: string[]) => void;
 }
 
-const CategoryCard: React.FC<{
+const CategorySection: React.FC<{
   category: IndustryCategory;
   selected: string[];
   onChange: (subfields: string[]) => void;
@@ -43,52 +43,62 @@ const CategoryCard: React.FC<{
   );
 
   return (
-    <Collapsible className="rounded-lg border border-border bg-card transition-colors duration-200">
-      <CollapsibleTrigger className="flex w-full items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/50 transition-colors group">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-          <Icon size={18} className="text-foreground" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">{category.label}</p>
-        </div>
-        {count > 0 && (
-          <span className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-[11px] font-semibold text-primary-foreground">
-            {count} selected
+    <AccordionItem
+      value={category.id}
+      className={cn(
+        "rounded-lg border overflow-hidden transition-colors duration-200",
+        count > 0 ? "border-primary" : "border-border"
+      )}
+    >
+      <AccordionTrigger className="px-4 py-3.5 hover:no-underline [&>svg]:hidden">
+        <div className="flex items-center gap-3 w-full pr-2">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+            <Icon size={18} className="text-foreground" />
+          </div>
+          <span className="text-sm font-medium text-foreground flex-1 text-left truncate">
+            {category.label}
           </span>
-        )}
-        <ChevronDown
-          size={16}
-          className="shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180"
-        />
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="border-t border-border px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {category.subfields.map((sf) => {
-            const isChecked = selected.includes(sf);
-            return (
-              <label
-                key={sf}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-md border px-3 py-2.5 cursor-pointer transition-all duration-150",
-                  "min-h-[44px] text-sm",
-                  isChecked
-                    ? "border-primary bg-card shadow-sm"
-                    : "border-transparent bg-transparent hover:bg-muted/50"
-                )}
-              >
-                <Checkbox
-                  checked={isChecked}
-                  onCheckedChange={() => toggleSubfield(sf)}
-                />
-                <span className={cn("text-sm", isChecked ? "font-medium text-foreground" : "text-muted-foreground")}>
-                  {sf}
-                </span>
-              </label>
-            );
-          })}
+          {count > 0 ? (
+            <span className="shrink-0 flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold text-primary-foreground">
+              <Check size={12} />
+              {count}
+            </span>
+          ) : (
+            <span className="shrink-0 text-xs text-muted-foreground">
+              {category.subfields.length} subfields
+            </span>
+          )}
         </div>
-      </CollapsibleContent>
-    </Collapsible>
+      </AccordionTrigger>
+      <AccordionContent className="pb-0">
+        <div className="border-t border-border px-4 py-3.5">
+          <div className="flex flex-wrap gap-2">
+            {category.subfields.map((sf) => {
+              const isChecked = selected.includes(sf);
+              return (
+                <button
+                  key={sf}
+                  type="button"
+                  onClick={() => toggleSubfield(sf)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-all duration-150 ease-out",
+                    "min-h-[36px] border cursor-pointer",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+                    "active:scale-[1.03]",
+                    isChecked
+                      ? "border-primary bg-primary text-primary-foreground font-medium shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-foreground hover:text-foreground"
+                  )}
+                >
+                  {isChecked && <Check size={14} className="shrink-0" />}
+                  {sf}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
   );
 };
 
@@ -98,6 +108,7 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
 }) => {
   const totalSelected = Object.values(selections).reduce((sum, arr) => sum + arr.length, 0);
   const isMinMet = totalSelected >= 3;
+  const categoriesWithSelections = Object.values(selections).filter((a) => a.length > 0).length;
 
   return (
     <div className="flex flex-col gap-5">
@@ -109,24 +120,31 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
       </div>
 
       {/* Global counter */}
-      <div className="flex items-center gap-2">
-        {isMinMet && <Check size={16} className="text-success" />}
-        <p className={cn("text-sm font-medium", isMinMet ? "text-success" : "text-muted-foreground")}>
-          {totalSelected} selected {!isMinMet && "(minimum 3)"}
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {isMinMet && <Check size={16} className="text-success" />}
+          <p className={cn("text-sm font-medium", isMinMet ? "text-success" : "text-muted-foreground")}>
+            {totalSelected} selected {!isMinMet && "(minimum 3)"}
+          </p>
+        </div>
+        {categoriesWithSelections > 0 && (
+          <p className="text-xs text-muted-foreground">
+            across {categoriesWithSelections} categor{categoriesWithSelections === 1 ? "y" : "ies"}
+          </p>
+        )}
       </div>
 
-      {/* Category grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      {/* Category list */}
+      <Accordion type="multiple" className="flex flex-col gap-3">
         {INDUSTRY_CATEGORIES.map((cat) => (
-          <CategoryCard
+          <CategorySection
             key={cat.id}
             category={cat}
             selected={selections[cat.id] ?? []}
             onChange={(subfields) => onChange(cat.id, subfields)}
           />
         ))}
-      </div>
+      </Accordion>
     </div>
   );
 };
