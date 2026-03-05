@@ -9,7 +9,7 @@ import {
 import {
   Monitor, TrendingUp, GraduationCap, HeartPulse, Leaf, Palette,
   Wrench, Plane, Landmark, Users, ShoppingBag, Truck,
-  Check,
+  ChevronDown,
 } from "lucide-react";
 import { INDUSTRY_CATEGORIES, type IndustryCategory } from "./constants";
 
@@ -46,28 +46,33 @@ const CategorySection: React.FC<{
     <AccordionItem
       value={category.id}
       className={cn(
-        "rounded-lg border overflow-hidden transition-colors duration-200",
-        count > 0 ? "border-primary" : "border-border"
+        "rounded-lg border overflow-hidden transition-colors duration-200 bg-card",
+        count > 0 ? "border-success" : "border-border"
       )}
     >
       <AccordionTrigger className="px-4 py-3.5 hover:no-underline [&>svg]:hidden">
-        <div className="flex items-center gap-3 w-full pr-2">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-            <Icon size={18} className="text-foreground" />
+        <div className="flex items-center w-full pr-2 gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted">
+            <Icon size={16} className="text-foreground" />
           </div>
-          <span className="text-sm font-medium text-foreground flex-1 text-left truncate">
+          <span className="text-sm font-medium text-foreground flex-1 text-left">
             {category.label}
           </span>
+
           {count > 0 ? (
-            <span className="shrink-0 flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold text-primary-foreground">
-              <Check size={12} />
-              {count}
+            <span className="shrink-0 text-xs font-semibold text-success tabular-nums mr-2">
+              {count} selected
             </span>
           ) : (
-            <span className="shrink-0 text-xs text-muted-foreground">
+            <span className="shrink-0 text-xs text-muted-foreground mr-2">
               {category.subfields.length} subfields
             </span>
           )}
+
+          <ChevronDown
+            size={16}
+            className="shrink-0 text-muted-foreground transition-transform duration-200 [[data-state=open]>&]:rotate-180"
+          />
         </div>
       </AccordionTrigger>
       <AccordionContent className="pb-0">
@@ -84,13 +89,12 @@ const CategorySection: React.FC<{
                     "inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-all duration-150 ease-out",
                     "min-h-[36px] border cursor-pointer",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-                    "active:scale-[1.03]",
+                    "active:scale-105",
                     isChecked
-                      ? "border-primary bg-primary text-primary-foreground font-medium shadow-sm"
-                      : "border-border bg-card text-muted-foreground hover:border-foreground hover:text-foreground"
+                      ? "border-primary bg-primary text-primary-foreground font-medium"
+                      : "border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground"
                   )}
                 >
-                  {isChecked && <Check size={14} className="shrink-0" />}
                   {sf}
                 </button>
               );
@@ -113,7 +117,7 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h2 className="text-xl font-semibold text-foreground">What industries interest you?</h2>
+        <h2 className="text-xl font-bold text-foreground">What industries interest you?</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Select at least 3 fields or subfields that appeal to you
         </p>
@@ -121,12 +125,9 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
 
       {/* Global counter */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {isMinMet && <Check size={16} className="text-success" />}
-          <p className={cn("text-sm font-medium", isMinMet ? "text-success" : "text-muted-foreground")}>
-            {totalSelected} selected {!isMinMet && "(minimum 3)"}
-          </p>
-        </div>
+        <p className={cn("text-sm font-medium", isMinMet ? "text-success" : "text-muted-foreground")}>
+          {totalSelected} selected {!isMinMet && "(minimum 3)"}
+        </p>
         {categoriesWithSelections > 0 && (
           <p className="text-xs text-muted-foreground">
             across {categoriesWithSelections} categor{categoriesWithSelections === 1 ? "y" : "ies"}
@@ -135,7 +136,7 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
       </div>
 
       {/* Category list */}
-      <Accordion type="multiple" className="flex flex-col gap-3">
+      <Accordion type="multiple" className="flex flex-col gap-2">
         {INDUSTRY_CATEGORIES.map((cat) => (
           <CategorySection
             key={cat.id}
