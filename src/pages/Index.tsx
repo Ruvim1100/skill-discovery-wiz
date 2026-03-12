@@ -5,6 +5,7 @@ import { S2ValuesPage } from "@/components/stages/s2/S2ValuesPage";
 import { S3AptitudesPage } from "@/components/stages/s3/S3AptitudesPage";
 import { S4InterestsPage } from "@/components/stages/s4/S4InterestsPage";
 import { S5PreferencesPage } from "@/components/stages/s5/S5PreferencesPage";
+import { S6ReportPage } from "@/components/stages/s6/S6ReportPage";
 import { useWizardStore, STAGES } from "@/store/wizardStore";
 
 const Index: React.FC = () => {
