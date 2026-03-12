@@ -5,10 +5,12 @@ import {
   Clock,
   Building,
   TrendingUp,
-  AlertTriangle,
+  Sprout,
   Lightbulb,
+  Quote,
+  ArrowRight,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import type { ReportData } from "./constants";
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -24,21 +26,44 @@ interface ReportOverviewProps {
 
 export const ReportOverview: React.FC<ReportOverviewProps> = ({ report }) => {
   return (
-    <div className="flex flex-col gap-8">
-      {/* Behavioral Signals */}
+    <div className="flex flex-col gap-10">
+      {/* ── Target Statement ── */}
+      <Card className="border-primary/20 bg-primary-subtle/50 overflow-hidden relative">
+        <CardContent className="p-6 sm:p-8">
+          <div className="flex gap-3 items-start">
+            <Quote size={24} className="text-primary/40 flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <p className="text-base sm:text-lg font-medium text-foreground leading-relaxed">
+                {report.target.statement}
+              </p>
+              <p className="text-xs text-muted-foreground mt-3">
+                Based on your assessment across all 5 dimensions
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Profile at a Glance ── */}
       <section>
-        <h3 className="text-lg font-semibold text-foreground mb-4">Your Profile at a Glance</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <SectionHeader
+          icon={<BarChart size={18} className="text-info" />}
+          title="Your Profile at a Glance"
+          description="Key behavioral patterns we identified"
+        />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           {report.behavioralSignals.map((signal) => {
             const Icon = ICON_MAP[signal.icon] ?? BarChart;
             return (
-              <Card key={signal.label} className="text-center">
-                <CardContent className="p-4 flex flex-col items-center gap-2">
-                  <div className="h-10 w-10 rounded-full bg-primary-subtle flex items-center justify-center">
+              <Card key={signal.label} className="border-border/60 hover:shadow-md transition-shadow">
+                <CardContent className="p-4 sm:p-5 flex flex-col items-center text-center gap-2.5">
+                  <div className="h-11 w-11 rounded-xl bg-primary/8 flex items-center justify-center">
                     <Icon size={20} className="text-primary" />
                   </div>
-                  <p className="text-xs text-muted-foreground">{signal.label}</p>
-                  <p className="text-sm font-semibold text-foreground">{signal.value}</p>
+                  <div>
+                    <p className="text-[13px] text-muted-foreground leading-tight">{signal.label}</p>
+                    <p className="text-sm font-semibold text-foreground mt-0.5">{signal.value}</p>
+                  </div>
                 </CardContent>
               </Card>
             );
@@ -46,72 +71,84 @@ export const ReportOverview: React.FC<ReportOverviewProps> = ({ report }) => {
         </div>
       </section>
 
-      {/* Target Statement */}
-      <Card className="border-primary/20 bg-primary-subtle">
-        <CardContent className="p-5">
-          <p className="text-sm font-medium text-foreground leading-relaxed">
-            {report.target.statement}
-          </p>
-        </CardContent>
-      </Card>
+      {/* ── Strengths & Growth side by side on desktop ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Strengths */}
+        <section>
+          <SectionHeader
+            icon={<TrendingUp size={18} className="text-success" />}
+            title="Key Strengths"
+          />
+          <div className="flex flex-col gap-3">
+            {report.strengths.map((s) => (
+              <Card key={s.title} className="border-l-[3px] border-l-success/60 border-t-0 border-r-0 border-b-0 rounded-l-sm">
+                <CardContent className="p-4">
+                  <p className="text-sm font-semibold text-foreground leading-snug">{s.title}</p>
+                  <p className="text-[13px] text-muted-foreground mt-1.5 leading-relaxed">{s.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
 
-      {/* Strengths */}
+        {/* Growth Areas */}
+        <section>
+          <SectionHeader
+            icon={<Sprout size={18} className="text-warning" />}
+            title="Growth Areas"
+          />
+          <div className="flex flex-col gap-3">
+            {report.growthAreas.map((g) => (
+              <Card key={g.title} className="border-l-[3px] border-l-warning/60 border-t-0 border-r-0 border-b-0 rounded-l-sm">
+                <CardContent className="p-4">
+                  <p className="text-sm font-semibold text-foreground leading-snug">{g.title}</p>
+                  <p className="text-[13px] text-muted-foreground mt-1.5 leading-relaxed">{g.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* ── Next Steps ── */}
       <section>
-        <div className="flex items-center gap-2 mb-4">
-          <TrendingUp size={20} className="text-success" />
-          <h3 className="text-lg font-semibold text-foreground">Key Strengths</h3>
-        </div>
-        <div className="flex flex-col gap-3">
-          {report.strengths.map((s) => (
-            <Card key={s.title} className="border-success/30">
-              <CardContent className="p-4">
-                <p className="text-sm font-semibold text-foreground">{s.title}</p>
-                <p className="text-sm text-muted-foreground mt-1">{s.description}</p>
-              </CardContent>
-            </Card>
+        <SectionHeader
+          icon={<Lightbulb size={18} className="text-info" />}
+          title="Recommended Next Steps"
+          description="Actions to accelerate your career journey"
+        />
+        <div className="flex flex-col gap-2.5">
+          {report.suggestions.map((s, i) => (
+            <div
+              key={i}
+              className="flex items-start gap-3 p-3.5 rounded-lg bg-muted/40 hover:bg-muted/60 transition-colors"
+            >
+              <span className="flex-shrink-0 h-6 w-6 rounded-full bg-info/10 text-info flex items-center justify-center text-xs font-bold mt-0.5">
+                {i + 1}
+              </span>
+              <p className="text-sm text-foreground leading-relaxed flex-1">{s}</p>
+              <ArrowRight size={14} className="text-muted-foreground flex-shrink-0 mt-1" />
+            </div>
           ))}
         </div>
-      </section>
-
-      {/* Growth Areas */}
-      <section>
-        <div className="flex items-center gap-2 mb-4">
-          <AlertTriangle size={20} className="text-warning" />
-          <h3 className="text-lg font-semibold text-foreground">Growth Areas</h3>
-        </div>
-        <div className="flex flex-col gap-3">
-          {report.growthAreas.map((g) => (
-            <Card key={g.title} className="border-warning/30">
-              <CardContent className="p-4">
-                <p className="text-sm font-semibold text-foreground">{g.title}</p>
-                <p className="text-sm text-muted-foreground mt-1">{g.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Suggestions */}
-      <section>
-        <div className="flex items-center gap-2 mb-4">
-          <Lightbulb size={20} className="text-info" />
-          <h3 className="text-lg font-semibold text-foreground">Recommended Next Steps</h3>
-        </div>
-        <Card>
-          <CardContent className="p-4">
-            <ul className="flex flex-col gap-3">
-              {report.suggestions.map((s, i) => (
-                <li key={i} className="flex gap-3 text-sm text-foreground">
-                  <span className="flex-shrink-0 h-5 w-5 rounded-full bg-info/10 text-info flex items-center justify-center text-xs font-semibold">
-                    {i + 1}
-                  </span>
-                  {s}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
       </section>
     </div>
   );
 };
+
+/* ── Section Header helper ── */
+const SectionHeader: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  description?: string;
+}> = ({ icon, title, description }) => (
+  <div className="flex items-start gap-2.5 mb-4">
+    <div className="mt-0.5">{icon}</div>
+    <div>
+      <h3 className="text-base font-semibold text-foreground leading-tight">{title}</h3>
+      {description && (
+        <p className="text-[13px] text-muted-foreground mt-0.5">{description}</p>
+      )}
+    </div>
+  </div>
+);

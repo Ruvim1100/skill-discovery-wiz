@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useWizardStore } from "@/store/wizardStore";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Download, Trash2, EyeOff, ArrowRight } from "lucide-react";
+import { AlertTriangle, Download, Trash2, EyeOff, ArrowRight, ArrowLeft, FileText } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +28,6 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
   const [report, setReport] = useState<ReportData | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  // Check assessment completion
   const assessmentComplete = [1, 2, 3, 4, 5].every((s) =>
     completedStages.includes(s as 1 | 2 | 3 | 4 | 5)
   );
@@ -37,16 +36,13 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
     onValidityChange(false);
   }, [onValidityChange]);
 
-  // Simulate report generation
   useEffect(() => {
     if (!assessmentComplete) {
       setPageState("incomplete");
       return;
     }
-
     setPageState("loading");
     const timer = setTimeout(() => {
-      // Simulate API call — in production, POST /reports then GET /reports/:id
       try {
         setReport(MOCK_REPORT);
         setPageState("ready");
@@ -55,7 +51,6 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
         setPageState("error");
       }
     }, 4000);
-
     return () => clearTimeout(timer);
   }, [assessmentComplete, onValidityChange]);
 
@@ -71,11 +66,11 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
   const strongFitJobs = report?.jobs.filter((j) => j.category === "strong-fit") ?? [];
   const highPotentialJobs = report?.jobs.filter((j) => j.category === "high-potential") ?? [];
 
-  // ── Incomplete State ──
+  // ── Incomplete ──
   if (pageState === "incomplete") {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-6 text-center">
-        <div className="h-14 w-14 rounded-full bg-warning-subtle flex items-center justify-center">
+        <div className="h-14 w-14 rounded-full bg-warning/10 flex items-center justify-center">
           <AlertTriangle size={28} className="text-warning" />
         </div>
         <div>
@@ -85,22 +80,20 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
           </p>
         </div>
         <Button onClick={goToPreviousStage} className="gap-2">
+          <ArrowLeft size={16} />
           Go Back to Assessment
         </Button>
       </div>
     );
   }
 
-  // ── Loading State ──
-  if (pageState === "loading") {
-    return <ReportLoading />;
-  }
+  if (pageState === "loading") return <ReportLoading />;
 
-  // ── Error State ──
+  // ── Error ──
   if (pageState === "error") {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-6 text-center">
-        <div className="h-14 w-14 rounded-full bg-destructive-subtle flex items-center justify-center">
+        <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center">
           <AlertTriangle size={28} className="text-destructive" />
         </div>
         <div>
@@ -114,77 +107,95 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
     );
   }
 
-  // ── Report Ready ──
   if (!report) return null;
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* Page Header */}
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">
-          Stage 6 · Career Fit Report
-        </p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+    <div className="flex flex-col gap-10">
+      {/* ── Page Header ── */}
+      <div className="pb-6 border-b border-border/60">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <FileText size={16} className="text-primary" />
+          </div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+            Stage 6 · Career Fit Report
+          </p>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground mt-1">
           Your Career Fit Report
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Personalized insights based on your assessment results
+        <p className="text-sm text-muted-foreground mt-2 leading-relaxed max-w-lg">
+          Personalized insights based on your assessment across values, aptitudes, interests, and preferences.
         </p>
       </div>
 
-      {/* Report Overview */}
+      {/* ── Report Overview ── */}
       <ReportOverview report={report} />
 
       {/* ── Job Recommendations ── */}
-      <section className="flex flex-col gap-6">
-        <h2 className="text-xl font-semibold text-foreground">Job Recommendations</h2>
+      <section className="flex flex-col gap-8">
+        <div className="flex items-center gap-3 pb-2 border-b border-border/60">
+          <h2 className="text-xl font-semibold text-foreground">Job Recommendations</h2>
+          <Badge variant="outline" className="text-xs text-muted-foreground">
+            {report.jobs.length} matches
+          </Badge>
+        </div>
 
         {/* Strong Fit */}
         {strongFitJobs.length > 0 && (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-success text-success-foreground text-xs">Strong Fit</Badge>
-              <span className="text-sm text-muted-foreground">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Badge className="bg-success/10 text-success border-success/20 text-xs font-semibold" variant="outline">
+                Strong Fit
+              </Badge>
+              <span className="text-[13px] text-muted-foreground">
                 Roles that closely match your profile
               </span>
             </div>
-            {strongFitJobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
+            <div className="flex flex-col gap-4">
+              {strongFitJobs.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
           </div>
         )}
 
         {/* High Potential */}
         {highPotentialJobs.length > 0 && (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-primary text-primary-foreground text-xs">High Potential</Badge>
-              <span className="text-sm text-muted-foreground">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Badge className="bg-primary/10 text-primary border-primary/20 text-xs font-semibold" variant="outline">
+                High Potential
+              </Badge>
+              <span className="text-[13px] text-muted-foreground">
                 Stretch roles with growth opportunity
               </span>
             </div>
-            {highPotentialJobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
+            <div className="flex flex-col gap-4">
+              {highPotentialJobs.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
           </div>
         )}
       </section>
 
       {/* ── Report Actions ── */}
-      <section className="flex flex-col gap-3 pt-4 border-t border-border">
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" className="text-xs gap-1.5">
+      <section className="flex flex-col gap-4 pt-6 border-t border-border/60">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Report Actions</p>
+        <div className="flex flex-wrap gap-2.5">
+          <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-full">
             <Download size={14} />
             Export Report
           </Button>
-          <Button variant="outline" size="sm" className="text-xs gap-1.5">
+          <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-full">
             <EyeOff size={14} />
             Hide My Answers
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="text-xs gap-1.5 text-destructive hover:text-destructive"
+            className="text-xs gap-1.5 rounded-full text-destructive hover:text-destructive border-destructive/30 hover:bg-destructive/5"
             onClick={() => setShowDeleteDialog(true)}
           >
             <Trash2 size={14} />
@@ -193,9 +204,10 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
         </div>
       </section>
 
-      {/* Continue to Action Plan */}
-      <div className="flex justify-between items-center pt-2">
-        <Button variant="outline" onClick={goToPreviousStage} className="min-h-[44px]">
+      {/* ── Continue ── */}
+      <div className="flex justify-between items-center pt-4">
+        <Button variant="outline" onClick={goToPreviousStage} className="min-h-[44px] gap-2">
+          <ArrowLeft size={16} />
           Back
         </Button>
         <Button onClick={goToNextStage} className="min-h-[44px] px-6 gap-2">
@@ -204,7 +216,7 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
         </Button>
       </div>
 
-      {/* Delete Confirmation */}
+      {/* ── Delete Dialog ── */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
