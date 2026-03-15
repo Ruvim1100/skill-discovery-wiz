@@ -274,6 +274,3 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
     </div>
   );
 };
-
-// Re-export TrendingUp for use in the component
-import { TrendingUp } from "lucide-react";
