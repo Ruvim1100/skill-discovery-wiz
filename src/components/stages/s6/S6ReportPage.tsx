@@ -2,7 +2,17 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useWizardStore } from "@/store/wizardStore";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Download, Trash2, EyeOff, ArrowRight, ArrowLeft, FileText } from "lucide-react";
+import {
+  AlertTriangle,
+  Download,
+  Trash2,
+  EyeOff,
+  ArrowRight,
+  ArrowLeft,
+  FileText,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -70,7 +80,7 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
   if (pageState === "incomplete") {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-6 text-center">
-        <div className="h-14 w-14 rounded-full bg-warning/10 flex items-center justify-center">
+        <div className="h-14 w-14 rounded-full bg-warning-subtle flex items-center justify-center">
           <AlertTriangle size={28} className="text-warning" />
         </div>
         <div>
@@ -93,7 +103,7 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
   if (pageState === "error") {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-6 text-center">
-        <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center">
+        <div className="h-14 w-14 rounded-full bg-destructive-subtle flex items-center justify-center">
           <AlertTriangle size={28} className="text-destructive" />
         </div>
         <div>
@@ -112,9 +122,9 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
   return (
     <div className="flex flex-col gap-10">
       {/* ── Page Header ── */}
-      <div className="pb-6 border-b border-border/60">
+      <div className="pb-6 border-b border-border">
         <div className="flex items-center gap-2 mb-2">
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="h-8 w-8 rounded-lg bg-primary-subtle flex items-center justify-center">
             <FileText size={16} className="text-primary" />
           </div>
           <p className="text-xs font-semibold uppercase tracking-widest text-primary">
@@ -129,30 +139,43 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
         </p>
       </div>
 
-      {/* ── Report Overview ── */}
+      {/* ── Report Overview (Steps 2 & 3) ── */}
       <ReportOverview report={report} />
 
-      {/* ── Job Recommendations ── */}
+      {/* ── Job Recommendations (Step 4) ── */}
       <section className="flex flex-col gap-8">
-        <div className="flex items-center gap-3 pb-2 border-b border-border/60">
+        <div className="flex items-center gap-3 pb-2 border-b border-border">
           <h2 className="text-xl font-semibold text-foreground">Job Recommendations</h2>
           <Badge variant="outline" className="text-xs text-muted-foreground">
             {report.jobs.length} matches
           </Badge>
         </div>
 
+        {report.jobs.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
+            <Sparkles size={32} className="text-muted-foreground" />
+            <p className="text-sm text-muted-foreground max-w-sm">
+              We're expanding your matches — check back soon!
+            </p>
+          </div>
+        )}
+
         {/* Strong Fit */}
         {strongFitJobs.length > 0 && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <Badge className="bg-success/10 text-success border-success/20 text-xs font-semibold" variant="outline">
-                Strong Fit
-              </Badge>
-              <span className="text-[13px] text-muted-foreground">
-                Roles that closely match your profile
-              </span>
+              <div className="h-8 w-8 rounded-lg bg-success-subtle flex items-center justify-center">
+                <Zap size={16} className="text-success" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground leading-tight">Strong Fit</h3>
+                <p className="text-[13px] text-muted-foreground">
+                  Roles that closely align with your current profile
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col gap-4">
+            {/* Desktop: 3-col grid. Mobile: stack */}
+            <div className="grid grid-cols-1 gap-4">
               {strongFitJobs.map((job) => (
                 <JobCard key={job.id} job={job} />
               ))}
@@ -162,16 +185,19 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
 
         {/* High Potential */}
         {highPotentialJobs.length > 0 && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <Badge className="bg-primary/10 text-primary border-primary/20 text-xs font-semibold" variant="outline">
-                High Potential
-              </Badge>
-              <span className="text-[13px] text-muted-foreground">
-                Stretch roles with growth opportunity
-              </span>
+              <div className="h-8 w-8 rounded-lg bg-primary-subtle flex items-center justify-center">
+                <TrendingUp size={16} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground leading-tight">High Potential</h3>
+                <p className="text-[13px] text-muted-foreground">
+                  Growth opportunities that match your trajectory
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {highPotentialJobs.map((job) => (
                 <JobCard key={job.id} job={job} />
               ))}
@@ -181,7 +207,7 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
       </section>
 
       {/* ── Report Actions ── */}
-      <section className="flex flex-col gap-4 pt-6 border-t border-border/60">
+      <section className="flex flex-col gap-4 pt-6 border-t border-border">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Report Actions</p>
         <div className="flex flex-wrap gap-2.5">
           <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-full">
@@ -195,7 +221,7 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
           <Button
             variant="outline"
             size="sm"
-            className="text-xs gap-1.5 rounded-full text-destructive hover:text-destructive border-destructive/30 hover:bg-destructive/5"
+            className="text-xs gap-1.5 rounded-full text-destructive hover:text-destructive border-destructive hover:bg-destructive-subtle"
             onClick={() => setShowDeleteDialog(true)}
           >
             <Trash2 size={14} />
@@ -247,3 +273,6 @@ export const S6ReportPage: React.FC<S6ReportPageProps> = ({ onValidityChange }) 
     </div>
   );
 };
+
+// Re-export TrendingUp for use in the component
+import { TrendingUp } from "lucide-react";
