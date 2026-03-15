@@ -41,13 +41,23 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
       className={cn(
         "overflow-hidden transition-all duration-200",
         expanded ? "shadow-md" : "shadow-sm hover:shadow-md",
-        isStrongFit ? "border-success/25" : "border-primary/25"
+        isStrongFit ? "border-success" : "border-primary"
       )}
     >
+      {/* ── Gradient Header Bar ── */}
+      <div
+        className={cn(
+          "h-1.5",
+          isStrongFit
+            ? "bg-gradient-to-r from-success to-success"
+            : "bg-gradient-to-r from-primary to-info"
+        )}
+      />
+
       {/* ── Header (always visible) ── */}
       <button
         type="button"
-        className="w-full text-left p-5 sm:p-6 flex items-start justify-between gap-4 cursor-pointer hover:bg-muted/20 transition-colors"
+        className="w-full text-left p-5 sm:p-6 flex items-start justify-between gap-4 cursor-pointer hover:bg-muted transition-colors"
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
       >
@@ -56,29 +66,44 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
             <h4 className="text-base font-semibold text-foreground leading-snug">{job.title}</h4>
             <Badge
               className={cn(
-                "text-[11px] font-semibold px-2.5 py-0.5",
+                "text-[11px] font-semibold px-2.5 py-0.5 border-transparent",
                 isStrongFit
-                  ? "bg-success/10 text-success border-success/20"
-                  : "bg-primary/10 text-primary border-primary/20"
+                  ? "bg-success-subtle text-success"
+                  : "bg-primary-subtle text-primary"
               )}
               variant="outline"
             >
-              {job.matchScore}% {isStrongFit ? "Strong Fit" : "High Potential"}
+              {isStrongFit ? "Strong Fit" : "High Potential"}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">{job.company}</p>
+
+          {/* Tags */}
+          {job.tags && job.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {job.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           <div className="flex items-center gap-4 mt-2.5 text-[13px] text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <DollarSign size={14} className="text-success/70" aria-hidden="true" />
+              <DollarSign size={14} className="text-success" aria-hidden="true" />
               {job.salary}
             </span>
             <span className="flex items-center gap-1.5">
-              <MapPin size={14} className="text-primary/60" aria-hidden="true" />
+              <MapPin size={14} className="text-primary" aria-hidden="true" />
               {job.location}
             </span>
           </div>
         </div>
-        <div className="flex-shrink-0 mt-1 h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center">
+        <div className="flex-shrink-0 mt-1 h-8 w-8 rounded-full bg-muted flex items-center justify-center">
           {expanded ? (
             <ChevronUp size={16} className="text-muted-foreground" />
           ) : (
@@ -91,13 +116,13 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
       {expanded && (
         <CardContent className="px-5 sm:px-6 pb-6 pt-0">
           {/* Description */}
-          <p className="text-sm text-muted-foreground leading-relaxed mb-5 pb-5 border-b border-border/60">
+          <p className="text-sm text-muted-foreground leading-relaxed mb-5 pb-5 border-b border-border">
             {job.description}
           </p>
 
           {/* Tabs */}
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="w-full grid grid-cols-3 sm:grid-cols-6 h-auto gap-1 bg-muted/50 p-1 rounded-lg">
+            <TabsList className="w-full grid grid-cols-3 sm:grid-cols-6 h-auto gap-1 bg-muted p-1 rounded-lg">
               {[
                 { value: "overview", icon: LayoutList, label: "Overview" },
                 { value: "skills", icon: Sparkles, label: "Skills" },
@@ -122,7 +147,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
               <div className="flex flex-col gap-2.5">
                 {job.whyMatch.map((reason, i) => (
                   <div key={i} className="flex gap-3 text-sm items-start">
-                    <div className="h-5 w-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="h-5 w-5 rounded-full bg-success-subtle flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check size={12} className="text-success" />
                     </div>
                     <span className="text-foreground leading-relaxed">{reason}</span>
@@ -161,7 +186,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
                   { label: "Your Background", value: job.experience.yours, color: "text-foreground" },
                   { label: "Gap Analysis", value: job.experience.gap, color: "text-warning" },
                 ].map((item) => (
-                  <div key={item.label} className="p-3.5 rounded-lg bg-muted/30">
+                  <div key={item.label} className="p-3.5 rounded-lg bg-muted">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{item.label}</p>
                     <p className={cn("text-sm leading-relaxed", item.color)}>{item.value}</p>
                   </div>
@@ -173,7 +198,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
             <TabsContent value="learning" className="mt-5">
               <div className="flex flex-col gap-3">
                 {job.learning.map((course, i) => (
-                  <div key={i} className="flex items-center justify-between gap-3 p-3.5 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                  <div key={i} className="flex items-center justify-between gap-3 p-3.5 rounded-lg bg-muted hover:bg-secondary transition-colors">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground">{course.title}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
@@ -199,7 +224,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
                     <div
                       className={cn(
                         "absolute left-[-19px] top-1.5 h-3.5 w-3.5 rounded-full border-2 bg-background",
-                        i === 0 ? "border-primary bg-primary/10" : "border-muted-foreground/30"
+                        i === 0 ? "border-primary bg-primary-subtle" : "border-muted-foreground"
                       )}
                     />
                     <p className="text-sm font-medium text-foreground">{step.role}</p>
@@ -222,11 +247,11 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
               {/* Bridge Skills */}
               {job.bridgeSkills && job.bridgeSkills.length > 0 && (
-                <div className="mt-6 pt-5 border-t border-border/60">
+                <div className="mt-6 pt-5 border-t border-border">
                   <p className="text-xs font-semibold text-primary mb-3 uppercase tracking-wider">Bridge Skills</p>
                   <div className="flex flex-col gap-2.5">
                     {job.bridgeSkills.map((bs) => (
-                      <div key={bs.name} className="p-3.5 rounded-lg bg-primary/5 border border-primary/10">
+                      <div key={bs.name} className="p-3.5 rounded-lg bg-primary-subtle border border-primary">
                         <p className="text-sm font-medium text-foreground">{bs.name}</p>
                         <p className="text-xs text-muted-foreground mt-1">{bs.description}</p>
                       </div>
@@ -241,7 +266,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
                   <p className="text-xs font-semibold text-primary mb-3 uppercase tracking-wider">Entry Pathways</p>
                   <div className="flex flex-col gap-2.5">
                     {job.entryPathways.map((ep) => (
-                      <div key={ep.title} className="p-3.5 rounded-lg bg-muted/30">
+                      <div key={ep.title} className="p-3.5 rounded-lg bg-muted">
                         <p className="text-sm font-medium text-foreground">{ep.title}</p>
                         <p className="text-xs text-muted-foreground mt-1">{ep.description}</p>
                       </div>
@@ -253,15 +278,15 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
           </Tabs>
 
           {/* Why This Match */}
-          <Collapsible open={whyOpen} onOpenChange={setWhyOpen} className="mt-5 pt-5 border-t border-border/60">
+          <Collapsible open={whyOpen} onOpenChange={setWhyOpen} className="mt-5 pt-5 border-t border-border">
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-xs text-primary gap-1.5 px-0 hover:bg-transparent hover:text-primary/80">
+              <Button variant="ghost" size="sm" className="text-xs text-primary gap-1.5 px-0 hover:bg-transparent hover:text-primary-hover">
                 {whyOpen ? "Hide match details" : "Why this match?"}
                 {whyOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-3">
-              <div className="p-4 rounded-lg bg-muted/30">
+              <div className="p-4 rounded-lg bg-muted">
                 <ul className="flex flex-col gap-2.5">
                   {job.whyMatch.map((reason, i) => (
                     <li key={i} className="flex gap-3 text-sm text-foreground items-start">
@@ -275,11 +300,11 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
           </Collapsible>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-2.5 mt-5 pt-5 border-t border-border/60">
+          <div className="flex flex-wrap gap-2.5 mt-5 pt-5 border-t border-border">
             <Button
               variant={addedCompare ? "default" : "outline"}
               size="sm"
-              className={cn("text-xs gap-1.5 rounded-full", addedCompare && "bg-primary")}
+              className="text-xs gap-1.5 rounded-full"
               onClick={() => setAddedCompare(!addedCompare)}
             >
               {addedCompare ? <Check size={14} /> : <Plus size={14} />}
@@ -288,7 +313,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
             <Button
               variant={addedGoals ? "default" : "outline"}
               size="sm"
-              className={cn("text-xs gap-1.5 rounded-full", addedGoals && "bg-primary")}
+              className="text-xs gap-1.5 rounded-full"
               onClick={() => setAddedGoals(!addedGoals)}
             >
               {addedGoals ? <Check size={14} /> : <Target size={14} />}
@@ -305,7 +330,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
   );
 };
 
-/* ── Skill progress bar ── */
+/* ── Skill indicator bar ── */
 const SkillBar: React.FC<{ skill: { name: string; level: number; status: string } }> = ({ skill }) => {
   const barColor =
     skill.status === "matched" ? "bg-success" : skill.status === "bridge" ? "bg-primary" : "bg-warning";
@@ -313,7 +338,14 @@ const SkillBar: React.FC<{ skill: { name: string; level: number; status: string 
     <div>
       <div className="flex justify-between text-[13px] mb-1.5">
         <span className="text-foreground font-medium">{skill.name}</span>
-        <span className="text-muted-foreground tabular-nums">{skill.level}%</span>
+        <Badge variant="outline" className={cn(
+          "text-[10px] px-1.5 py-0 h-4 border-transparent",
+          skill.status === "matched" ? "bg-success-subtle text-success" :
+          skill.status === "bridge" ? "bg-primary-subtle text-primary" :
+          "bg-warning-subtle text-warning"
+        )}>
+          {skill.status === "matched" ? "Matched" : skill.status === "bridge" ? "Bridge" : "To grow"}
+        </Badge>
       </div>
       <div className="h-2 rounded-full bg-muted overflow-hidden">
         <div
