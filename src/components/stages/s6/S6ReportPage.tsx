@@ -12,6 +12,7 @@ import {
   FileText,
   Sparkles,
   Zap,
+  TrendingUp,
 } from "lucide-react";
 import {
   Dialog,
