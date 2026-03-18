@@ -14,7 +14,7 @@ const Index: React.FC = () => {
   const { currentStage } = useWizardStore();
 
   return (
-    <WizardLayout canContinue={canContinue} hideStageNav={currentStage >= 1 && currentStage <= 6}>
+    <WizardLayout canContinue={canContinue} hideStageNav={currentStage >= 1 && currentStage <= 7}>
       {currentStage === 1 ? (
         <S1OrientationPage onValidityChange={setCanContinue} />
       ) : currentStage === 2 ? (
