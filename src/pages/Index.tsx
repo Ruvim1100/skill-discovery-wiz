@@ -6,6 +6,7 @@ import { S3AptitudesPage } from "@/components/stages/s3/S3AptitudesPage";
 import { S4InterestsPage } from "@/components/stages/s4/S4InterestsPage";
 import { S5PreferencesPage } from "@/components/stages/s5/S5PreferencesPage";
 import { S6ReportPage } from "@/components/stages/s6/S6ReportPage";
+import { S7PlanPage } from "@/components/stages/s7/S7PlanPage";
 import { useWizardStore, STAGES } from "@/store/wizardStore";
 
 const Index: React.FC = () => {
@@ -13,7 +14,7 @@ const Index: React.FC = () => {
   const { currentStage } = useWizardStore();
 
   return (
-    <WizardLayout canContinue={canContinue} hideStageNav={currentStage >= 1 && currentStage <= 6}>
+    <WizardLayout canContinue={canContinue} hideStageNav={currentStage >= 1 && currentStage <= 7}>
       {currentStage === 1 ? (
         <S1OrientationPage onValidityChange={setCanContinue} />
       ) : currentStage === 2 ? (
@@ -26,6 +27,8 @@ const Index: React.FC = () => {
         <S5PreferencesPage onValidityChange={setCanContinue} />
       ) : currentStage === 6 ? (
         <S6ReportPage onValidityChange={setCanContinue} />
+      ) : currentStage === 7 ? (
+        <S7PlanPage onValidityChange={setCanContinue} />
       ) : (
         <div className="flex flex-col gap-6">
           <p
