@@ -27,6 +27,8 @@ const Index: React.FC = () => {
         <S5PreferencesPage onValidityChange={setCanContinue} />
       ) : currentStage === 6 ? (
         <S6ReportPage onValidityChange={setCanContinue} />
+      ) : currentStage === 7 ? (
+        <S7PlanPage onValidityChange={setCanContinue} />
       ) : (
         <div className="flex flex-col gap-6">
           <p
