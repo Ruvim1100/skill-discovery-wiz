@@ -217,20 +217,55 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
             {/* Career Path */}
             <TabsContent value="career" className="mt-5">
-              <div className="relative pl-7">
-                <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border" />
-                {job.careerPath.map((step, i) => (
-                  <div key={i} className="relative pb-5 last:pb-0">
-                    <div
-                      className={cn(
-                        "absolute left-[-19px] top-1.5 h-3.5 w-3.5 rounded-full border-2 bg-background",
-                        i === 0 ? "border-primary bg-primary-subtle" : "border-muted-foreground"
-                      )}
-                    />
-                    <p className="text-sm font-medium text-foreground">{step.role}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{step.timeline}</p>
-                  </div>
-                ))}
+              <div className="relative pl-10">
+                {/* Vertical connector line */}
+                <div className="absolute left-[15px] top-5 bottom-5 w-0.5 bg-border" />
+
+                {job.careerPath.map((step, i) => {
+                  const isFirst = i === 0;
+                  const isLast = i === job.careerPath.length - 1;
+
+                  return (
+                    <div key={i} className="relative pb-8 last:pb-0">
+                      {/* Timeline node */}
+                      <div
+                        className={cn(
+                          "absolute left-[-25px] top-1 flex items-center justify-center",
+                          "h-5 w-5 rounded-full border-2",
+                          isFirst
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : isLast
+                              ? "border-primary bg-background"
+                              : "border-muted-foreground bg-background"
+                        )}
+                      >
+                        {isFirst && (
+                          <div className="h-2 w-2 rounded-full bg-primary-foreground" />
+                        )}
+                      </div>
+
+                      {/* Content card */}
+                      <div
+                        className={cn(
+                          "rounded-lg border p-4 transition-colors",
+                          isFirst
+                            ? "border-primary bg-primary-subtle"
+                            : "border-border bg-muted hover:bg-secondary"
+                        )}
+                      >
+                        <p className={cn(
+                          "text-sm font-semibold leading-snug",
+                          isFirst ? "text-primary" : "text-foreground"
+                        )}>
+                          {step.role}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {step.timeline}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </TabsContent>
 
