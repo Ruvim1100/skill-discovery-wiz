@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Monitor, Smartphone } from "lucide-react";
+import { Monitor, Smartphone, ShieldCheck, Clock, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface Session {
   id: string;
@@ -72,8 +73,8 @@ export const ActiveSessionsList: React.FC = () => {
   if (isLoading) {
     return (
       <div role="status" aria-busy="true" aria-label="Loading sessions" className="space-y-3">
-        <div className="h-20 rounded-lg bg-muted animate-pulse" />
-        <div className="h-20 rounded-lg bg-muted animate-pulse" />
+        <div className="h-[72px] rounded-xl bg-muted animate-pulse" />
+        <div className="h-[72px] rounded-xl bg-muted animate-pulse" />
       </div>
     );
   }
@@ -94,29 +95,56 @@ export const ActiveSessionsList: React.FC = () => {
   }
 
   return (
-    <div aria-live="polite" className="divide-y">
+    <div aria-live="polite" className="space-y-2.5">
       {sessions.map((session) => {
         const DeviceIcon = session.platform === "mobile" ? Smartphone : Monitor;
         return (
-          <div key={session.id} className="py-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <DeviceIcon className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden="true" />
-              <div className="min-w-0">
+          <div
+            key={session.id}
+            className={cn(
+              "rounded-xl border p-4 flex items-center justify-between gap-4 transition-colors",
+              session.isCurrent
+                ? "border-primary/20 bg-primary/[0.03]"
+                : "border-border hover:border-primary/30 hover:bg-muted/50"
+            )}
+          >
+            <div className="flex items-start gap-3.5 min-w-0">
+              <div
+                className={cn(
+                  "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+                  session.isCurrent
+                    ? "bg-primary/10 text-primary"
+                    : "bg-muted text-muted-foreground"
+                )}
+              >
+                <DeviceIcon className="h-[18px] w-[18px]" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-medium text-sm">{session.deviceName}</span>
+                  <span className="font-semibold text-sm leading-tight">
+                    {session.deviceName}
+                  </span>
                   {session.isCurrent && (
                     <Badge
                       variant="secondary"
-                      className="bg-green-100 text-green-700 text-[10px] px-1.5 py-0"
+                      className="border-primary/20 bg-primary/10 text-primary text-[10px] font-medium px-2 py-0 h-[18px]"
                       aria-label="This is your current device"
                     >
+                      <ShieldCheck className="h-3 w-3 mr-0.5" aria-hidden="true" />
                       This device
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Last active {session.lastActive} · Signed in {session.signedIn}
-                </p>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="h-3 w-3" aria-hidden="true" />
+                    {session.lastActive}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <CalendarDays className="h-3 w-3" aria-hidden="true" />
+                    {session.signedIn}
+                  </span>
+                </div>
               </div>
             </div>
             {!session.isCurrent && (
@@ -130,6 +158,7 @@ export const ActiveSessionsList: React.FC = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    className="shrink-0"
                     disabled={revokingId === session.id}
                   >
                     {revokingId === session.id ? "Revoking…" : "Revoke"}
