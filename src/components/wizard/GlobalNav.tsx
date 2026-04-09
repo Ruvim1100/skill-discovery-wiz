@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, User, LayoutDashboard, FileText, Compass } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Menu, X, User, LayoutDashboard, FileText, Compass, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -109,6 +110,10 @@ const ProfileDropdown: React.FC = () => {
           <p className="text-xs text-muted-foreground">Assessment in progress</p>
         </div>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => navigate("/settings")}>
+          <Settings size={14} aria-hidden="true" className="mr-2" />
+          Settings
+        </DropdownMenuItem>
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
           onClick={() => navigate("/")}
@@ -177,6 +182,15 @@ export const GlobalNav: React.FC = () => {
                   Navigation
                 </p>
                 <NavLinks orientation="vertical" />
+                <Separator className="my-3" />
+                <Link
+                  to="/settings"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                >
+                  <Settings size={16} aria-hidden="true" />
+                  Settings
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
