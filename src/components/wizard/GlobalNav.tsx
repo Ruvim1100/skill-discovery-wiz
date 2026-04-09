@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 import { Menu, X, User, LayoutDashboard, FileText, Compass, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
