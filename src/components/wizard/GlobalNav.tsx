@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, User, LayoutDashboard, FileText, Compass } from "lucide-react";
+import { Menu, X, User, LayoutDashboard, FileText, Compass, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -109,6 +109,10 @@ const ProfileDropdown: React.FC = () => {
           <p className="text-xs text-muted-foreground">Assessment in progress</p>
         </div>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => navigate("/settings")}>
+          <Settings size={14} aria-hidden="true" className="mr-2" />
+          Settings
+        </DropdownMenuItem>
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
           onClick={() => navigate("/")}
