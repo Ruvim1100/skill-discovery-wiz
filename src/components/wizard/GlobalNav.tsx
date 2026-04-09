@@ -181,6 +181,15 @@ export const GlobalNav: React.FC = () => {
                   Navigation
                 </p>
                 <NavLinks orientation="vertical" />
+                <Separator className="my-3" />
+                <Link
+                  to="/settings"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                >
+                  <Settings size={16} aria-hidden="true" />
+                  Settings
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
