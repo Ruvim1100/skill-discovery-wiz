@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 import NotFoundPreview from "./app/not-found";
+import CoverLetterPreview from "./pages/CoverLetterPreview";
 import RootError from "./app/error";
 import GlobalError from "./app/global-error";
 import AppError from "./app/(app)/error";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/preview/global-error" element={<GlobalError error={mockError} reset={mockReset} />} />
           <Route path="/preview/app-error" element={<AppError error={mockError} reset={mockReset} />} />
           <Route path="/preview/public-error" element={<PublicError error={mockError} reset={mockReset} />} />
+          <Route path="/preview/cover-letter" element={<CoverLetterPreview />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
