@@ -1,6 +1,5 @@
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   CoverLetterSidebar,
   type CoverLetterSession,
@@ -60,7 +59,7 @@ const PreviewFrame: React.FC<{ label: string; children: React.ReactNode }> = ({
 
 const CoverLetterPreview: React.FC = () => {
   return (
-    <TooltipProvider>
+    <>
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
           <header className="space-y-2">
@@ -181,7 +180,7 @@ const CoverLetterPreview: React.FC = () => {
           </section>
         </div>
       </div>
-    </TooltipProvider>
+    </>
   );
 };
 
