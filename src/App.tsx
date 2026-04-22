@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import SettingsPage from "./pages/SettingsPage";
 import CoverLetterPage from "./pages/CoverLetterPage";
 import CoverLetterDetailPage from "./pages/CoverLetterDetailPage";
+import ReportConceptsIndex from "./pages/report-concepts/ReportConceptsIndex";
+import EditorialConcept from "./pages/report-concepts/EditorialConcept";
+import DashboardConcept from "./pages/report-concepts/DashboardConcept";
+import NarrativeConcept from "./pages/report-concepts/NarrativeConcept";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +30,10 @@ const App = () => (
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/cover-letter" element={<CoverLetterPage />} />
           <Route path="/cover-letter/:id" element={<CoverLetterDetailPage />} />
+          <Route path="/report-concepts" element={<ReportConceptsIndex />} />
+          <Route path="/report-concepts/editorial" element={<EditorialConcept />} />
+          <Route path="/report-concepts/dashboard" element={<DashboardConcept />} />
+          <Route path="/report-concepts/narrative" element={<NarrativeConcept />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
