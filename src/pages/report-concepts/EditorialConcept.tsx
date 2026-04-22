@@ -113,7 +113,7 @@ export default function EditorialConcept() {
         {/* Improvement plan */}
         <section className="py-16 border-t border-border grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16">
           <div>
-            <SectionLabel>04 — Where to focus</SectionLabel>
+            <SectionLabel>Where to focus</SectionLabel>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">A plan, not a checklist.</h2>
           </div>
           <ol className="space-y-8">
@@ -145,7 +145,7 @@ export default function EditorialConcept() {
         <section className="py-16 border-t border-border">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16 mb-10">
             <div>
-              <SectionLabel>05 — Goal timeline</SectionLabel>
+              <SectionLabel>Goal timeline</SectionLabel>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight">A year, paced.</h2>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function EditorialConcept() {
         <section id="strong-fit" className="py-16 border-t border-border">
           <div className="flex items-baseline justify-between mb-8">
             <div>
-              <SectionLabel>06 — Recommended roles</SectionLabel>
+              <SectionLabel>Recommended roles</SectionLabel>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight">Where this profile leads.</h2>
             </div>
             <Badge variant="outline" className="text-xs">
