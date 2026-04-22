@@ -78,7 +78,7 @@ export default function EditorialConcept() {
         {/* Behavioral signature — radial chips */}
         <section className="py-16 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16">
           <div>
-            <SectionLabel>01 — Behavioral signature</SectionLabel>
+            <SectionLabel>Behavioral signature</SectionLabel>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">Six traits, one shape.</h2>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               Length of each bar reflects how strongly the trait surfaced across your assessment — not a score, but a
