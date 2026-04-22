@@ -106,8 +106,8 @@ export default function EditorialConcept() {
 
         {/* Strengths & growth — two-column drop cap editorial */}
         <section className="py-16 border-t border-border grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          <StrengthsList title="02 — Strengths" items={STRENGTHS} tone="success" icon={<TrendingUp size={14} />} />
-          <StrengthsList title="03 — Growth areas" items={GROWTH_AREAS} tone="warning" icon={<AlertTriangle size={14} />} />
+          <StrengthsList title="Strengths" items={STRENGTHS} tone="success" icon={<TrendingUp size={14} />} />
+          <StrengthsList title="Growth areas" items={GROWTH_AREAS} tone="warning" icon={<AlertTriangle size={14} />} />
         </section>
 
         {/* Improvement plan */}
