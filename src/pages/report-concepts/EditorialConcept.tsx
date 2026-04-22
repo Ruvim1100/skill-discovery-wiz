@@ -65,34 +65,14 @@ export default function EditorialConcept() {
     <ReportFrame title="Your Career Fit Report" subtitle="" tag="Concept · Editorial">
       <div className="mx-auto max-w-[1200px] px-6 py-12 lg:py-16">
         {/* Masthead */}
-        <header className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 pb-12 border-b border-border">
-          <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Career Fit Report · Spring 2026
-            </div>
-            <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
-              A report shaped by your own answers.
-            </h1>
-            <p className="mt-5 text-lg text-muted-foreground leading-relaxed max-w-2xl">{MATCH_SUMMARY}</p>
+        <header className="pb-12 border-b border-border">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+            Career Fit Report · Spring 2026
           </div>
-          <aside className="lg:border-l lg:border-border lg:pl-8 flex flex-col gap-4 self-end">
-            <SectionLabel>In this issue</SectionLabel>
-            <ol className="text-sm space-y-2">
-              {[
-                "Behavioral signature",
-                "Strengths & growth",
-                "Improvement plan",
-                "Goal timeline",
-                "Strong-fit roles",
-                "High-potential roles",
-              ].map((s, i) => (
-                <li key={s} className="flex items-baseline gap-3 text-muted-foreground hover:text-foreground transition-colors">
-                  <span className="text-[10px] font-mono text-muted-foreground/60">{String(i + 1).padStart(2, "0")}</span>
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ol>
-          </aside>
+          <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
+            A report shaped by your own answers.
+          </h1>
+          <p className="mt-5 text-lg text-muted-foreground leading-relaxed max-w-2xl">{MATCH_SUMMARY}</p>
         </header>
 
         {/* Behavioral signature — radial chips */}
