@@ -65,40 +65,20 @@ export default function EditorialConcept() {
     <ReportFrame title="Your Career Fit Report" subtitle="" tag="Concept · Editorial">
       <div className="mx-auto max-w-[1200px] px-6 py-12 lg:py-16">
         {/* Masthead */}
-        <header className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 pb-12 border-b border-border">
-          <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Career Fit Report · Spring 2026
-            </div>
-            <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
-              A report shaped by your own answers.
-            </h1>
-            <p className="mt-5 text-lg text-muted-foreground leading-relaxed max-w-2xl">{MATCH_SUMMARY}</p>
+        <header className="pb-12 border-b border-border">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+            Career Fit Report · Spring 2026
           </div>
-          <aside className="lg:border-l lg:border-border lg:pl-8 flex flex-col gap-4 self-end">
-            <SectionLabel>In this issue</SectionLabel>
-            <ol className="text-sm space-y-2">
-              {[
-                "Behavioral signature",
-                "Strengths & growth",
-                "Improvement plan",
-                "Goal timeline",
-                "Strong-fit roles",
-                "High-potential roles",
-              ].map((s, i) => (
-                <li key={s} className="flex items-baseline gap-3 text-muted-foreground hover:text-foreground transition-colors">
-                  <span className="text-[10px] font-mono text-muted-foreground/60">{String(i + 1).padStart(2, "0")}</span>
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ol>
-          </aside>
+          <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
+            A report shaped by your own answers.
+          </h1>
+          <p className="mt-5 text-lg text-muted-foreground leading-relaxed max-w-2xl">{MATCH_SUMMARY}</p>
         </header>
 
         {/* Behavioral signature — radial chips */}
         <section className="py-16 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16">
           <div>
-            <SectionLabel>01 — Behavioral signature</SectionLabel>
+            <SectionLabel>Behavioral signature</SectionLabel>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">Six traits, one shape.</h2>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               Length of each bar reflects how strongly the trait surfaced across your assessment — not a score, but a
@@ -126,14 +106,14 @@ export default function EditorialConcept() {
 
         {/* Strengths & growth — two-column drop cap editorial */}
         <section className="py-16 border-t border-border grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          <StrengthsList title="02 — Strengths" items={STRENGTHS} tone="success" icon={<TrendingUp size={14} />} />
-          <StrengthsList title="03 — Growth areas" items={GROWTH_AREAS} tone="warning" icon={<AlertTriangle size={14} />} />
+          <StrengthsList title="Strengths" items={STRENGTHS} tone="success" icon={<TrendingUp size={14} />} />
+          <StrengthsList title="Growth areas" items={GROWTH_AREAS} tone="warning" icon={<AlertTriangle size={14} />} />
         </section>
 
         {/* Improvement plan */}
         <section className="py-16 border-t border-border grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16">
           <div>
-            <SectionLabel>04 — Where to focus</SectionLabel>
+            <SectionLabel>Where to focus</SectionLabel>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">A plan, not a checklist.</h2>
           </div>
           <ol className="space-y-8">
@@ -165,7 +145,7 @@ export default function EditorialConcept() {
         <section className="py-16 border-t border-border">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16 mb-10">
             <div>
-              <SectionLabel>05 — Goal timeline</SectionLabel>
+              <SectionLabel>Goal timeline</SectionLabel>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight">A year, paced.</h2>
             </div>
           </div>
@@ -199,7 +179,7 @@ export default function EditorialConcept() {
         <section id="strong-fit" className="py-16 border-t border-border">
           <div className="flex items-baseline justify-between mb-8">
             <div>
-              <SectionLabel>06 — Recommended roles</SectionLabel>
+              <SectionLabel>Recommended roles</SectionLabel>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight">Where this profile leads.</h2>
             </div>
             <Badge variant="outline" className="text-xs">
